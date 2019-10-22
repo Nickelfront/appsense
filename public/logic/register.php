@@ -1,14 +1,16 @@
 <?php
 include_once "../../app/bootstrap.php";
 
+use app\DataBase\DB;
 use util\RegistrationValidator;
-// show($_POST);
+use util\Mail;
 
 if (isset($_SESSION['oldValues']))
     unset($_SESSION['oldValues']);
 
 if (isset($_SESSION['errorMessages']))
     unset($_SESSION['errorMessages']);
+
 
 session_start();
 
@@ -63,18 +65,34 @@ try {
     if (!empty($errorMessages)) {
         throw new Exception("Registration validation failed.");
     }
-    
-    header("location: ../contact.php");
+
+    unset($_SESSION['errorMessages']);    
+    unset($_SESSION['oldValues']);    
+
+    $db = new DB("appsenseDB");
+    $userData = array($firstName, $lastName, $email, password_hash($password, PASSWORD_BCRYPT),);
+    $db->createUser($userData);
+
+    $endpoint = "../index.php";
+    // header("location: ../contact.php");
+
+    // TODO send confirmation email
+    // $message = "Hello there, $firstName $lastName. You have been registered for our services. Please verify your registration here: http://google.com/";
+    // Mail::send("runawaygirl196@gmail.com", $email, "Registration confirmation", $message);
 
 } catch (Exception $e) {
-    // $_SESSION['errors'] = [$e->getCode() => $e->getMessage()];
     $_SESSION['errorMessages'] = $errorMessages;
  
     $_SESSION['oldValues'] = $_POST;
-    header("location: ../register.php?invalid");
+
+    $endpoint = "../register.php?invalid";
+    // header("location: ../register.php?invalid");
 }
+
+// finally:
+header("location: $endpoint");
+
 
 function saveErrorMessage(&$errorMessages, $inputType, $message) {
     $errorMessages[$inputType] = $message;
-    // $errorMessages[] = [$inputType => $message];
 }

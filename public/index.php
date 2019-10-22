@@ -4,16 +4,6 @@ include_once "../app/bootstrap.php";
 use app\DataBase\DB;
 use Util\Template;
 
-$db = new DB("appsensedb");
-
-$db->createUser(array("name", "lastname", "email", "pass"));
-
-// $allUsers = $db->fetchAll("users");
-
-// foreach($allUsers as $userData) {
-//   echo $userData["first_name"];
-// }
-
 echo Template::header();
 
 ?>
