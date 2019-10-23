@@ -1,11 +1,22 @@
 <?php
 include_once "../app/bootstrap.php";
 
-use app\DataBase\DB;
 use Util\Template;
+// use app\DataBase\DB;
 
-echo Template::header();
+// $db = new DB("appsensedb");
 
+// $db->createUser(array("name", "lastname", "email", "pass"));
+
+// $allUsers = $db->fetchAll("users");
+
+// foreach($allUsers as $userData) {
+//   echo $userData["first_name"];
+// }
+
+$pageName = "Home";
+
+echo Template::header($pageName);
 ?>
 
 <div class="hero-wrap">
@@ -14,12 +25,12 @@ echo Template::header();
     <div class="slider-text d-md-flex align-items-center" data-scrollax-parent="true">
 
       <div class="one-forth ftco-animate align-self-md-center" data-scrollax=" properties: { translateY: '70%' }">
-        <h1 class="mb-4"> Template for
+        <h1 class="mb-4"> Management of
           <strong class="typewrite" data-period="4000" data-type='[ "Digital Agency", "Portfolio", "SEO Agency", "Business" ]'>
             <span class="wrap"></span>
           </strong>
         </h1>
-        <p class="mb-md-5 mb-sm-3" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+        <p class="mb-md-5 mb-sm-3" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">No matter the reason for absence, you can record and monitor your staff attendance with our tailored absence management software.</p>
         <p data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><a href="#" class="btn btn-primary px-4 py-3">Get a Quote</a> <a href="#" class="btn btn-primary btn-outline-primary px-4 py-3">Our Portfolio</a></p>
       </div>
       <div class="one-half align-self-md-end align-self-sm-center">
@@ -43,7 +54,7 @@ echo Template::header();
   <div class="container">
     <div class="row">
       <div class="col-md-8">
-        <h3 class="heading-white">We Provide High Quality Services</h3>
+        <h3 class="heading-white">We Provide High Quality HR Services</h3>
       </div>
     </div>
   </div>
@@ -54,7 +65,7 @@ echo Template::header();
     <div class="row justify-content-center mb-5 pb-5">
       <div class="col-md-7 text-center heading-section ftco-animate">
         <h2 class="mb-2">HR is going digital</h2>
-        <span class="subheading">Attendance Tracking Software</span>
+        <span class="subheading">Absence Management Tool</span>
       </div>
     </div>
     <div class="row">
@@ -64,8 +75,9 @@ echo Template::header();
             <div class="icon"><span class="flaticon-research"></span></div>
           </div>
           <div class="media-body p-2 mt-3">
-            <h3 class="heading">Absence Management</h3>
-            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+            <h3 class="heading">Document Management</h3>
+            <!-- <p>Automated leave tracking to simplify employee time off booking and approval by managers.</p> -->
+          	<p>Issue, track and securely store all of your vital HR documents online with our straightforward HR document management software, allowing you to easily communicate all your policies and procedures.</p>
           </div>
         </div>
       </div>
@@ -86,8 +98,8 @@ echo Template::header();
             <div class="icon"><span class="flaticon-market"></span></div>
           </div>
           <div class="media-body p-2 mt-3">
-            <h3 class="heading">Audience Analytics</h3>
-            <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+            <h3 class="heading">Employee Directory and Records</h3>
+            <p>Our specialist HR reporting software provides critical information to help you make better decisions, plan for the future, identify areas for improvement and connect with your employees.</p>
           </div>
         </div>
       </div>
@@ -101,15 +113,15 @@ echo Template::header();
       		<div class="col-md-6 d-flex">
       			<div class="services-wrap">
       				<div class="heading-section mb-5 ftco-animate">
-		            <h2 class="mb-2">Our Service Keeps you Happy</h2>
-		            <span class="subheading">Search Engine &amp; Social Media Optimization Experts</span>
+		            <h2 class="mb-2">Our Service Makes it Easy for You</h2>
+		            <span class="subheading">Absence Management Tool</span>
 		          </div>
       				<div class="list-services d-flex ftco-animate">
       					<div class="icon d-flex justify-content-center align-items-center">
       						<span class="icon-pencil"></span>
       					</div>
       					<div class="text">
-	      					<h3>Logo Branding</h3>
+	      					<h3>Employee Self-Service</h3>
 	      					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
       					</div>
       				</div>
@@ -127,7 +139,7 @@ echo Template::header();
       						<span class="icon-pie-chart"></span>
       					</div>
       					<div class="text">
-	      					<h3>Online Marketing</h3>
+	      					<h3>Accurate HR Reports</h3>
 	      					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
       					</div>
       				</div>
@@ -146,7 +158,7 @@ echo Template::header();
 		            <div class="block-18 text-center">
 		              <div class="text">
 		                <strong class="number" data-number="6780">0</strong>
-		                <span>Happy Clients</span>
+		                <span>Days Off</span>
 		              </div>
 		            </div>
 		          </div>
@@ -154,7 +166,7 @@ echo Template::header();
 		            <div class="block-18 text-center">
 		              <div class="text">
 		                <strong class="number" data-number="4500">0</strong>
-		                <span>Running Projects</span>
+		                <span>Employees</span>
 		              </div>
 		            </div>
 		          </div>
@@ -162,7 +174,7 @@ echo Template::header();
 		            <div class="block-18 text-center">
 		              <div class="text">
 		                <strong class="number" data-number="4200">0</strong>
-		                <span>Projects Completed</span>
+		                <span>Companies</span>
 		              </div>
 		            </div>
 		          </div>
@@ -170,7 +182,7 @@ echo Template::header();
 		            <div class="block-18 text-center">
 		              <div class="text">
 		                <strong class="number" data-number="320">0</strong>
-		                <span>Cups of Coffee</span>
+		                <span>Happy HRs</span>
 		              </div>
 		            </div>
 		          </div>
@@ -285,9 +297,13 @@ echo Template::header();
 	            <h3 class="heading-2 mb-4">Enjoy All The Features</h3>
 	            
 	            <ul class="pricing-text">
-	              <li><strong>150 GB</strong> Bandwidth</li>
+<!-- 	              <li><strong>150 GB</strong> Bandwidth</li>
 	              <li><strong>100 GB</strong> Storage</li>
-	              <li><strong>$1.00 / GB</strong> Overages</li>
+	              <li><strong>$1.00 / GB</strong> Overages</li> -->
+	              <li><strong><span class="icon-check"></span>&nbsp;Max. 10 employees</strong></li>
+	              <li><strong><span class="icon-check"></span>&nbsp;HR Dashboard</strong></li>
+	              <li><strong><span class="icon-check"></span>&nbsp;Absence Calendar</strong></li>
+	              <li><strong><span class="icon-check"></span>&nbsp;Time off management</strong></li>
 	              <li>All features</li>
 	            </ul>
 	            </div>
@@ -359,14 +375,14 @@ echo Template::header();
     		<div class="row">
     			<div class="col-md-6 pr-md-5 aside-stretch py-5 choose">
     				<div class="heading-section heading-section-white mb-5 ftco-animate">
-	            <h2 class="mb-2">Reasons for Choosing Us </h2>
+	            <h2 class="mb-2">Reasons to choose AppSense</h2>
 	          </div>
 	          <div class="ftco-animate">
-	          	<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. Because there were thousands of bad Commas, wild Question Marks and devious Semikoli</p>
+	          	<p>Our self service software solution ensures that you get a full set of policies and appropriate triggers (with key information being sent to relevant line managers, HR, and senior management as appropriate to your needs) based on best practices across a wide range of industries. In addition to this, the system can be customised to ensure compliance with your specific absence management policy and ensure that the relevant triggers are tripped - and information disseminated immediately to the right members of staff - as you require.</p>
 	          	<ul class="un-styled my-5">
-	          		<li><span class="icon-check"></span>Consectetur adipisicing elit</li>
-	          		<li><span class="icon-check"></span>Adipisci repellat accusamus</li>
-	          		<li><span class="icon-check"></span>Tempore reprehenderit vitae</li>
+	          		<li><span class="icon-check"></span>Automate the HR process</li>
+	          		<li><span class="icon-check"></span>Increase employee satisfaction</li>
+	          		<li><span class="icon-check"></span>Save time and money</li>
 	          	</ul>
 	          </div>
     			</div>
