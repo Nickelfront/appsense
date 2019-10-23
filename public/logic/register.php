@@ -5,14 +5,14 @@ use app\DataBase\DB;
 use util\RegistrationValidator;
 use util\Mail;
 
+
+session_start();
+
 if (isset($_SESSION['oldValues']))
     unset($_SESSION['oldValues']);
 
 if (isset($_SESSION['errorMessages']))
     unset($_SESSION['errorMessages']);
-
-
-session_start();
 
 // $method = "validate";
 // $validator = new RegistrationValidator();
@@ -70,7 +70,7 @@ try {
     unset($_SESSION['oldValues']);    
 
     $db = new DB("appsenseDB");
-    $userData = array($firstName, $lastName, $email, password_hash($password, PASSWORD_BCRYPT),);
+    $userData = array($firstName, $lastName, $email, password_hash($password, PASSWORD_BCRYPT), $gender, $phone,);
     $db->createUser($userData);
 
     $endpoint = "../index.php";
@@ -81,6 +81,7 @@ try {
     // Mail::send("runawaygirl196@gmail.com", $email, "Registration confirmation", $message);
 
 } catch (Exception $e) {
+    // show($e);
     $_SESSION['errorMessages'] = $errorMessages;
  
     $_SESSION['oldValues'] = $_POST;

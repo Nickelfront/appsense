@@ -59,11 +59,11 @@ class DB {
     // }
 
     /**
-     * @param array $userData: consists of first name, last name, email and password in said order
+     * @param array $userData: consists of first name, last name, email, password, gender, phone in said order
      */
     public function createUser(array $userData) 
     {
-        $query = "INSERT INTO users (`first_name`, `last_name`, `email`, `password`) VALUES (";
+        $query = "INSERT INTO users (`first_name`, `last_name`, `email`, `password`, `gender`, `phone`) VALUES (";
         foreach ($userData as $data) {
             $query .= "'" . $data . "'" .",";
         }

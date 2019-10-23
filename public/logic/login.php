@@ -8,13 +8,11 @@ include_once "../../app/bootstrap.php";
 
     $userEmail = $_POST['email'];
 
-    $db = new DB("appsensedb");
+    $db = new DB("appsenseDB");
     $correctPass = verifyUser($db, $userEmail, $_POST['pass']);
     
     session_start();
     // show($_SESSION);
-
-    $db->update("users", "email", "loyahojaw@geroev.net", "last_name", "WOODYYY");
 
     // if ($db->findUser($userEmail, $userPass)) { // TODO if user email and pass are the correct
     if ($correctPass) {
@@ -35,6 +33,6 @@ include_once "../../app/bootstrap.php";
     header("location: $endpoint");
 
 function verifyUser($db, $userEmail, $userPass) {
-    // $db = new DB("appsensedb");
+    // $db = new DB("appsenseDB");
     return password_verify($userPass, $db->findUserPass($userEmail));
 }
