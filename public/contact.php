@@ -2,21 +2,11 @@
 include_once "../app/bootstrap.php";
 
 use Util\Template;
-// use app\DataBase\DB;
-
-// $db = new DB("appsensedb");
-
-// $db->createUser(array("name", "lastname", "email", "pass"));
-
-// $allUsers = $db->fetchAll("users");
-
-// foreach($allUsers as $userData) {
-//   echo $userData["first_name"];
-// }
 
 $pageName = "Contact";
+$templateDir = "public";
 
-echo Template::header($pageName);
+echo Template::header($pageName, $templateDir);
 ?>
 
     <div class="hero-wrap hero-wrap-2" style="background-image: url(images/bg_2.jpg);" data-stellar-background-ratio="0.5">
@@ -24,8 +14,8 @@ echo Template::header($pageName);
       <div class="container-fluid">
         <div class="row no-gutters d-flex slider-text align-items-center justify-content-center" data-scrollax-parent="true">
           <div class="col-md-6 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
-          	<p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="index.html">Home</a></span> <span>Blog</span></p>
-            <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Our Blog</h1>
+          	<p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="index.html">Home</a></span> <span>Contact</span></p>
+            <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Our Contact</h1>
           </div>
         </div>
       </div>
@@ -138,7 +128,6 @@ echo Template::header($pageName);
       </div>
     </section>
 
-
 <?php
 
-echo Template::footer();
+echo Template::footer($templateDir);

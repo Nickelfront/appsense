@@ -25,7 +25,7 @@ include_once "../../app/bootstrap.php";
     if ($_SESSION['loggedIn']) {
         // header ("location: ../welcome.php");    
         // load user page
-        $endpoint = "../welcome.php";
+        $endpoint = "../dashboard/index.php";
         
         $_SESSION['userData'] = $db->findRecord("users", "email='$userEmail'");
     }

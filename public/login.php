@@ -26,8 +26,7 @@
 		session_start();
 		if (isset($_SESSION['loggedIn'])) {
 			if ($_SESSION['loggedIn']) {
-				header("location: index.php"); // TODO redirect to personal page; 
-												// LATER TODO remove LOGIN and SIGN UP when user is logged in
+				header("location: dashboard/index.php"); // TODO redirect to personal page; 
 			}
 		}
 	?>

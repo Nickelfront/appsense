@@ -2,23 +2,13 @@
 include_once "../app/bootstrap.php";
 
 use Util\Template;
-// use app\DataBase\DB;
-
-// $db = new DB("appsensedb");
-
-// $db->createUser(array("name", "lastname", "email", "pass"));
-
-// $allUsers = $db->fetchAll("users");
-
-// foreach($allUsers as $userData) {
-//   echo $userData["first_name"];
-// }
 
 $pageName = "About";
+$templateDir = "public";
 
-echo Template::header($pageName);
+echo Template::header($pageName, $templateDir);
 ?>
-	    <!-- END nav -->
+
 
     <div class="hero-wrap hero-wrap-2" style="background-image: url(images/bg_2.jpg);" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
@@ -238,7 +228,6 @@ echo Template::header($pageName);
       </div>
     </section>
 
-
 <?php
 
-echo Template::footer();
+echo Template::footer($templateDir);

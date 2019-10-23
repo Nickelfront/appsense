@@ -3,14 +3,14 @@ namespace util;
 
 class Template {
 
-    public static function header($pageName) {
-        $header = self::getTemplate(getBaseDir("public") . "template-header.html");
+    public static function header($pageName, $templateDir) {
+        $header = self::getTemplate(getBaseDir($templateDir) . "template-header.html");
         $header = self::setTitle($header, $pageName);
         return $header;
     }
 
-    public static function footer() {
-        return self::getTemplate(getBaseDir("public") . "template-footer.html");
+    public static function footer($templateDir) {
+        return self::getTemplate(getBaseDir($templateDir) . "template-footer.html");
     }
 
     private static function getTemplate($templateFile) {
