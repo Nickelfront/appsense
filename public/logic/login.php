@@ -4,35 +4,25 @@ use app\DataBase\DB;
 
 include_once "../../app/bootstrap.php";
         
+$userEmail = $_POST['email'];
 
+$correctPass = verifyUser($db, $userEmail, $_POST['pass']);
 
-    $userEmail = $_POST['email'];
+if ($correctPass) {
+    $_SESSION['loggedIn'] = true;
+} else {
+    $endpoint = "../login.php?incorrect";
+}
 
-    $db = new DB("appsenseDB");
-    $correctPass = verifyUser($db, $userEmail, $_POST['pass']);
-    
-    session_start();
-    // show($_SESSION);
+if ($_SESSION['loggedIn']) {
+    $endpoint = "../dashboard/index.php";
 
-    // if ($db->findUser($userEmail, $userPass)) { // TODO if user email and pass are the correct
-    if ($correctPass) {
-        $_SESSION['loggedIn'] = true;
-    } else {
-        // header("location: ../login.php?incorrect");
-        $endpoint = "../login.php?incorrect";
-    }
-    
-    if ($_SESSION['loggedIn']) {
-        // header ("location: ../welcome.php");    
-        // load user page
-        $endpoint = "../dashboard/index.php";
-        
-        $_SESSION['userData'] = $db->findRecord("users", "email='$userEmail'");
-    }
+    $_SESSION['userData'] = $db->findRecord("users", "email='$userEmail'");
+    // $_SESSION['loggedUserEmail'] = $userEmail;
+}
 
-    header("location: $endpoint");
+header("location: $endpoint");
 
 function verifyUser($db, $userEmail, $userPass) {
-    // $db = new DB("appsenseDB");
     return password_verify($userPass, $db->findUserPass($userEmail));
 }

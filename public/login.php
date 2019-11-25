@@ -26,7 +26,7 @@
 		session_start();
 		if (isset($_SESSION['loggedIn'])) {
 			if ($_SESSION['loggedIn']) {
-				header("location: dashboard/index.php"); // TODO redirect to personal page; 
+				header("location: dashboard/index.php");  
 			}
 		}
 	?>

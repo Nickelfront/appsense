@@ -29,8 +29,6 @@
 <?php
 include_once "../app/bootstrap.php";
 
-    session_start();
-
     $firstName = '';
     $lastName = '';
     $birthDate = '';

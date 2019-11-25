@@ -5,9 +5,6 @@ use app\DataBase\DB;
 use util\RegistrationValidator;
 use util\Mail;
 
-
-session_start();
-
 if (isset($_SESSION['oldValues']))
     unset($_SESSION['oldValues']);
 
@@ -69,8 +66,8 @@ try {
     unset($_SESSION['errorMessages']);    
     unset($_SESSION['oldValues']);    
 
-    $db = new DB("appsenseDB");
-    $userData = array($firstName, $lastName, $email, password_hash($password, PASSWORD_BCRYPT), $gender, $phone,);
+    $db = new DB();
+    $userData = array($firstName, $lastName, $email, password_hash($password, PASSWORD_BCRYPT), $gender, $phone, "1");
     $db->createUser($userData);
 
     $endpoint = "../index.php";
