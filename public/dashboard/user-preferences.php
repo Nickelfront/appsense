@@ -6,9 +6,12 @@ use Util\Template;
 $pageName = "Dashboard";
 $templateDir = "public/dashboard"; 
 
-echo Template::header($pageName, $templateDir);
+init_dashboard(Template::header($pageName, $templateDir));
+
+$user = new User($_SESSION['userData']);
+
 ?>
-<div class="app-main__outer">
+            <div class="app-main__outer">
                     <div class="app-main__inner">
                         <div class="app-page-title">
                             <div class="page-title-wrapper">

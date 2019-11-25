@@ -3,4 +3,4 @@
 if (!$_SESSION['loggedIn']) {
 	header("location: forbidden.php");	
 }
-session_start();
+// session_start();

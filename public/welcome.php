@@ -1,7 +1,6 @@
 <?php 
 include_once "../app/bootstrap.php";
 
-session_start();
 
 if (isset($_SESSION['loggedIn'])) {
     $user = $_SESSION['userData'];
