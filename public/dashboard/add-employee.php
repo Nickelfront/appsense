@@ -2,12 +2,24 @@
 include_once "../../app/bootstrap.php";
 
 use Util\Template;
+use util\User;
 
-$pageName = "Dashboard";
+$pageName = "Dashboard | Add employee";
 $templateDir = "public/dashboard"; 
 
-echo Template::header($pageName, $templateDir);
+init_dashboard(Template::header($pageName, $templateDir));
+$user = new User($_SESSION['userData']);
+
 ?>
+
+<script>
+    var url = new URL(window.location.href);
+    var fail = url.searchParams.get("fail");
+    if (fail == "" || fail) {
+        console.log(fail);
+        // document.querySelector("body").classList.add("modal-open");
+    }
+</script>
 
      <div class="app-main__outer">
                     <div class="app-main__inner">
@@ -98,30 +110,71 @@ echo Template::header($pageName, $templateDir);
                                     <div class="col-md-6">
                                         <div class="main-card mb-3 card">
                                             <div class="card-body"><h5 class="card-title">Employee Registration Form</h5>
-                                                <form class="">
-                                                    <div class="position-relative form-group"><label for="firstNameInput" class="">First name</label><input name="email" id="firstNameInput" type="text" class="form-control"></div>
-                                                    <div class="position-relative form-group"><label for="lastNameInput" class="">Last name</label><input name="email" id="lastNameInput" type="text" class="form-control"></div>
-                                                    <div class="position-relative form-group"><label for="emailInput" class="">Email</label><input name="email" id="emailInput" placeholder="user@example.com" type="email" class="form-control"></div>
-                                                   <div class="position-relative form-group"><label for="companyChoice" class="">Company</label><select name="select" id="companyChoice" class="form-control">
-                                                        <option>Company 1</option>
-                                                        <!-- TODO Load options from DB -->
-                                                        <option>Company 2</option>
-                                                        <option>Company 3</option>
-                                                        <option>Company 4</option>
-                                                        <option>Company 5</option>
-                                                    </select></div>
-                                                    <div class="position-relative form-group"><label for="positionChoice" class="">Position</label><select multiple="" name="selectMulti" id="positionChoice" class="form-control">
-                                                        <option>Position 1</option>
-                                                        <!-- TODO load options from DB, according to selected COMPANY -->
-                                                        <option>Position 2</option>
-                                                        <option>Position 3</option>
-                                                        <option>Position 4</option>
-                                                        <option>Position 5</option>
-                                                    </select></div>
-                                                    <div class="position-relative form-group"><label for="messageToEmployee" class="">Message to employee (optional)</label><textarea name="text" id="messageToEmployee" class="form-control"></textarea></div>
-                                                    <div class="position-relative form-group"><label for="exampleFile" class="">File</label><input name="file" id="exampleFile" type="file" class="form-control-file">
-                                                        <small class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
+                                                <form action="logic/add-employee.php" method="POST" class="">
+                                                    <div class="position-relative form-group">
+                                                        <label for="firstNameInput" class="">First name</label>
+                                                        <input name="first_name" id="firstNameInput" type="text" class="form-control">
                                                     </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="lastNameInput" class="">Last name</label>
+                                                        <input name="last_name" id="lastNameInput" type="text" class="form-control">
+                                                    </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="emailInput" class="">Email</label>
+                                                        <input name="email" id="emailInput" placeholder="user@example.com" type="email" class="form-control">
+                                                        <small class="form-text text-muted">TODO : Must not be a registered business owner's e-mail.</small>
+                                                    </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="phoneInput" class="">Phone number</label>
+                                                        <input name="phone" id="phoneInput" type="text" class="form-control">
+                                                    </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="companyChoice" class="">Company</label>
+                                                        <select name="company" id="companyChoice" class="form-control">
+                                                            <?php
+                                                                $companyOptionPlaceholder = '<option value="{clu_company_id}">{clu_company_name}</option>';
+                                                                $userCompanies = $db->getUserCompanies($user->get('id'));
+                                                              
+                                                                foreach ($userCompanies as $company) {
+                                                                    $companyInfo = $companyOptionPlaceholder;
+                                                                    $companyInfo = str_replace("{clu_company_id}", $company->get('id'), $companyInfo);
+                                                                    $companyInfo = str_replace("{clu_company_name}", $company->get('name'), $companyInfo);
+                                                                    echo $companyInfo;
+                                                                }
+                                                            ?>   
+                                                        </select>
+                                                    </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="positionChoice" class="">Position</label>
+                                                        <input name="position" id="position" placeholder="" type="text" class="form-control">
+                                                        <!-- <select name="position" id="positionChoice" class="form-control"> -->
+                                                            <?php
+                                                                // $positionOptionPlaceholder = "<option>{company_position_type}</option>";
+                                                                // $companyPositions = $db->getPositionsForCompany($company->get('id'));
+                                                                // foreach ($companyPositions as $position) {
+                                                                //     $positionOption = $positionOptionPlaceholder;
+                                                                //     $positionOption = str_replace("{company_position_type}", $position, $positionOptionPlaceholder);
+                                                                //     echo $positionOption;
+                                                                // }
+                                                            ?>   
+                                                        <!-- </select> -->
+                                                    </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="workHoursInput" class="">Work Hours per Day</label>
+                                                        <input name="work_hours_per_day" id="workHoursInput" type="number" min="1" max="13" class="form-control">
+                                                    </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="availableDaysOffInput" class="">Available Days off</label>
+                                                        <input name="available_days_off" id="availableDaysOffInput" type="number" min="0" max="28" class="form-control">
+                                                    </div>
+                                                    <div class="position-relative form-group">
+                                                        <label for="messageToEmployee" class="">Message to employee (optional)</label>
+                                                        <textarea name="text" id="messageToEmployee" class="form-control"></textarea>
+                                                    </div>
+                                                    <!-- <div class="position-relative form-group">
+                                                        <label for="exampleFile" class="">File</label>
+                                                        <input name="file" id="exampleFile" type="file" class="form-control-file">
+                                                    </div> -->
                                                     <button class="mt-1 btn btn-primary">Submit</button>
                                                 </form>
                                             </div>
