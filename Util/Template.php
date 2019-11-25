@@ -4,13 +4,17 @@ namespace util;
 class Template {
 
     public static function header($pageName, $templateDir) {
-        $header = self::getTemplate(getBaseDir($templateDir) . "template-header.html");
+        $header = self::content($templateDir, "template-header.html");
         $header = self::setTitle($header, $pageName);
         return $header;
     }
 
     public static function footer($templateDir) {
-        return self::getTemplate(getBaseDir($templateDir) . "template-footer.html");
+        return self::content($templateDir, "template-footer.html");
+    }
+
+    public static function content($templateDir, $templateFileName) {
+        return self::getTemplate(getBaseDir($templateDir) . $templateFileName);
     }
 
     private static function getTemplate($templateFile) {
