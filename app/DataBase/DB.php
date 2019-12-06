@@ -2,9 +2,8 @@
 namespace app\DataBase;
 
 use app\Configuration\Configuration;
+use DateTime;
 use PDO;
-use util\Company;
-use util\User;
 
 class DB {
 
@@ -18,69 +17,62 @@ class DB {
         $this->connection = new PDO("mysql:host=$host;dbname=$dbName", "$user", "$pass", [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]); // Return result as associative array
     }
 
+    public function getData($tableName, $uniqueId) {
+        $entityData = $this->searchInDB("SELECT * FROM $tableName WHERE id = $uniqueId")[0];
+        return $entityData;
+    }
+
+    public function listAllRecords($tableName) {
+        return $this->searchInDB("SELECT * FROM $tableName");
+    }
+
+    public function getAllPositions() {
+        return $this->searchInDB("SELECT * FROM position_types");
+    }
+
     /* CREATE OPERATIONS */
 
-    /**
-     * @param array $userData: consists of first name, last name, email, password, gender, phone, user_type_id in said order
-     */
-    public function createUser(array $userData) { 
-        $query = "INSERT INTO users (`first_name`, `last_name`, `email`, `password`, `gender`, `phone`, `user_type_id`) VALUES (";
-        $query = $this->addDataToQuery($query, $userData);
-        
+    public function create($query, $data) {
+        $query = $this->addDataToQuery($query, $data);
+        // show($query);
+        // echo $query;
+        return $this->execute($query);
+    }
+    
+    public function createAbsenceRequestNotification(array $notificationData) {
+        $query = "INSERT INTO absence_request_notifications (`from_user_id`, `to_user_id`, `absence_request_id`) VALUES (";
+        $query = $this->addDataToQuery($query, $notificationData);
+        show($query);
         $this->execute($query);
     }
 
-    /**
-     * @param array $companyData: consists of name, registration_number, address, business_type_id, owner_id in said order
-     */
-    public function createCompany(array $companyData) {
-        $query = "INSERT INTO companies (`name`, `registration_number`, `address`, `business_type_id`, `owner_id`) VALUES (";
-        $query = $this->addDataToQuery($query, $companyData);
-        
-        $this->execute($query);    
-    }
-
-    /**
-    * @param array $employeeData: consists of user_id, company_id, position_id, available_days_off, work_hours_per_day in said order
-     */
-    public function createEmployee(array $employeeData) {
-        $query = "INSERT INTO employees (`user_id`, `company_id`, `position_id`, `available_days_off`, `work_hours_per_day`) VALUES (";
-        $query = $this->addDataToQuery($query, $employeeData);
-
-         $this->execute($query);    
-    }
-
-    public function createPosition(array $positionData) {
-        $query = "INSERT INTO employees (`name`) VALUES (";
-        $query = $this->addDataToQuery($query, $positionData);
-
-        $this->execute($query);        
-    }
-    
     private function addDataToQuery(string $query, array $data) {
         foreach ($data as $entry) {
             $query .= "'" . $entry . "'" .",";
         }
-        
+        // close values list
         $query[strlen($query) - 1] = ")";
         return $query;
     }
 
     /** GET OPERATIONS */
     
-    public function getUser($userEmail) {
+    public function getUserIdByEmail($userEmail) {
         $query = "SELECT id FROM users WHERE email = '$userEmail'";
         
         $result = $this->searchInDB($query)[0];
-        // show($result);
-        return new User($result);
+        return $result['id'];
+    }
+ 
+    public function getUserField($userId, $requiredField)
+    {
+        $userData = $this->getUserData($userId);
+        return $this->getField($userData, $requiredField);
     }
 
-    public function getUserData($userId, $requiredField)
-    {
+    public function getUserData($userId) {
         $userData = $this->searchInDB("SELECT * FROM users WHERE id = $userId")[0];
-        return $this->getField($userData, $requiredField);
-
+        return $userData;
     }
 
     /**
@@ -88,16 +80,22 @@ class DB {
      * @return array array of all the Companies
      */
     public function getUserCompanies($userId) {
-        $query = "SELECT * FROM companies WHERE companies.owner_id = $userId";
+        $query = "SELECT id FROM companies WHERE owner_id = $userId";
         $results = $this->searchInDB($query);
-        // show($results);
-        $companies = array();
-        foreach ($results as $result) {
-            $companies[] = new Company($result);
-        }
-        return $companies;
+        return $results;
     }
   
+    public function getEmployeeByUserId($userId) {
+        $employeeId = $this->searchInDB("SELECT id FROM employees WHERE user_id = $userId")[0]['id'];
+        return $employeeId;
+    }
+
+    public function getUserByEmployeeId($employeeId) {
+        $employee = $this->getEmployee($employeeId);
+        $userId = $this->searchInDB("SELECT id FROM users WHERE id = " . $employee['user_id'])[0]['id'];
+        return $userId;
+    }
+
     public function getEmployee($employeeId) {
         return $this->searchInDB("SELECT * FROM employees WHERE id = $employeeId")[0];
     }
@@ -105,21 +103,61 @@ class DB {
     public function getCompany($companyId) {
         $companyResult = $this->searchInDB("SELECT * FROM companies WHERE id = $companyId")[0];
         if ($companyResult) {
-            return new Company($companyResult);
+            return $companyResult;
         } return false;
     }
+
+    public function getCompanyData($companyId) {
+        $companyData = $this->searchInDB("SELECT * FROM companies WHERE id = $companyId")[0];
+        return $companyData;
+    }
+
+    public function getApprovedAbsences($companyId) {
+        $query = "SELECT * FROM absence_requests WHERE status = 'Approved' AND employee_id = ";
+        $approvedAbsences = array();
+        $employees = $this->listAllEmployees($companyId);
         
+        foreach ($employees as $employee) {
+            $employeeAbsences = $this->searchInDB($query . $employee['id']); // array of all absences for this employee
+            if ($employeeAbsences) {
+                $approvedAbsences[] = $employeeAbsences; 
+            }
+        }
+        return $approvedAbsences; 
+    }
+
+    public function getNewAbsenceRequests($userId) {
+        $result = $this->searchInDB("SELECT COUNT FROM absence_requests_notifications WHERE for_user_id = $userId")[0];
+
+        return $result;
+    }
+    
     /** LIST OPERATIONS */
-       
+    /**
+     * Lists all HRs working in the HR department of a given company
+     *  
+     *  */    
+    public function listHRsForCompany($companyId) {
+        $hrResults = array();
+        $hrResults = $this->searchInDB("SELECT id FROM employees WHERE company_id = $companyId AND position_id = 2");
+        return $hrResults;
+    }
+
     /**
      * Lists  all employees of a given company
      * @param $companyId : the ID of the company whose employees need to be listed  
      */
     public function listAllEmployees($companyId) {
-        return $this->searchInDB("SELECT * FROM employees WHERE company_id = $companyId");
+        return $this->searchInDB("SELECT id FROM employees WHERE company_id = $companyId");
     }
 
     /** UPDATE OPERATIONS -TODO */
+    public function updateUserField($userId, $field, $newValue) {
+        $this->update("users", $field, $newValue, "id", $userId);
+        $now = new DateTime();
+        $this->update("users", "updated_at", date_format($now, 'Y-m-d H:i:s'), "id", $userId);
+    }
+
     /** DELETE OPERATIONS -TODO */
 
     /**
@@ -128,6 +166,10 @@ class DB {
      */
     private function searchInDB($query) {
         return $this->connection->query($query)->fetchAll();
+    }
+
+    private function getFirstResult($query) {
+        return $this->searchInDB($query)[0];
     }
 
     public function getType($name, $id) {
@@ -152,12 +194,19 @@ class DB {
     }
 
     /**
+     * Used to set a temporary login token to a user
+     */
+    public function setToken($userId, $token) {
+        return $this->update("users", "id", $userId, "login_token", $token);
+    }
+
+    /**
      * Find a single record in a table by a specified filter.
      * @param $table the name of the table from the database to search in  
      * @param $uniqueFilter the condition that you are sure that makes the record unique from the rest
      */
     public function findRecord($table, $uniqueFilter) {
-        return $this->searchInDB("SELECT * FROM $table WHERE $uniqueFilter")[0];
+        return $this->searchInDB("SELECT * FROM $table WHERE $uniqueFilter") ? $this->searchInDB("SELECT * FROM $table WHERE $uniqueFilter")[0] : false;
     }
         
     /**
@@ -176,6 +225,10 @@ class DB {
         $this->connection->exec($query);
     }
     
+    public function getLastInsertedID() {
+        return $this->connection->lastInsertId();
+    }
+
     /**
      *  @param $table the name of the table to update in the database
      *  @param $record the record to update - it must be a condition that makes the record unique for this table, e.g. email = 'useremail@mail.com'
@@ -183,9 +236,9 @@ class DB {
      *  @param $newValue the new value for this field
      *
      */
-    public function update($table, $uniqueField, $uniqueValue, $field, $newValue) {
+    public function update($table, $field, $newValue, $uniqueField, $uniqueValue) {
         $query = "UPDATE $table SET $field = '$newValue' WHERE $uniqueField = '$uniqueValue'"; 
-        $this->execute($query);
+        return $this->execute($query);
     }
 
     /**

@@ -1,7 +1,9 @@
 <?php 
+include_once "../app/bootstrap.php";
 
-session_start();
+$db->setToken($_SESSION['id'], null);
 
 unset($_SESSION);
 session_destroy();
+
 header("location: index.php");

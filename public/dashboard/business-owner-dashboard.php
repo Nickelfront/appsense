@@ -162,6 +162,8 @@
                         <tr>
 
                         <?php 
+
+
                             $companiesTableTemplate = '<td class="text-center text-muted">{company_no}</td>
                             <td>
                                 <div class="widget-content p-0">

@@ -7,11 +7,13 @@ use Util\Template;
 $pageName = "Dashboard | Add company";
 $templateDir = "public/dashboard"; 
 
-init_dashboard(Template::header($pageName, $templateDir));
+init_dashboard($currentUser, Template::header($pageName, $templateDir));
 
-?>  
+?>
+
 <!-- TODO make modal appear if adding failed -->
-<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" <?php if ($_GET['companyAdded'] == 'success') echo "aria-hidden='true'" ?>>
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel"
+    <?php if ($_GET['companyAdded'] == 'success') echo "aria-hidden='true'" ?>>
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -47,45 +49,57 @@ init_dashboard(Template::header($pageName, $templateDir));
                 </div>
             </div>
         </div>
-                
-                <div class="tab-content">
-                    <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-                        <div class="main-card mb-3 card">
-                            <div class="card-body"><h5 class="card-title">New Company</h5>
-                            <form name="new-company-form" action="logic/add-company.php" method="POST">
+
+        <div class="tab-content">
+            <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
+                <div class="main-card mb-3 card">
+                    <div class="card-body">
+                        <h5 class="card-title">New Company</h5>
+                        <form name="new-company-form" action="logic/add-company.php" method="POST">
                             <!-- <form name="new-company-form"> -->
-                                    <div class="form-row">
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group"><label for="companyName" class="">Company Name</label><input name="company_name" id="company_name" type="text" class="form-control"></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group"><label for="companyRegistrationNumber" class="">Registration number</label><input name="registration_number" id="companyRegistrationNumber" type="text" class="form-control"></div>
-                                        </div>
-                                    </div>
-                                    <div class="position-relative form-group"><label for="companyAddress" class="">Address</label><input name="company_address" id="companyAddress" type="text" class="form-control"></div>
-                                    <label for="businessTypes">Business Type</label>
-                                    <select name="business_type_id" id="businessTypes" class="form-control">
-                                        <?php
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="companyName" class="">Company
+                                            Name</label><input name="company_name" id="company_name" type="text"
+                                            class="form-control"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group"><label for="companyRegistrationNumber"
+                                            class="">Registration number</label><input name="registration_number"
+                                            id="companyRegistrationNumber" type="text" class="form-control"></div>
+                                </div>
+                            </div>
+                            <div class="position-relative form-group"><label for="companyAddress"
+                                    class="">Address</label><input name="company_address" id="companyAddress"
+                                    type="text" class="form-control"></div>
+                            <label for="businessTypes">Business Type</label>
+                            <select name="business_type_id" id="businessTypes" class="form-control">
+                                <?php
                                             $businessTypeTemplate = "<option value='{business_type_id}'>{business_type_name}</option>";
-                                            $db = new DB();
+                                            $placeholders = array(
+                                                "id" => "{business_type_id}",
+                                                "name" => "{business_type_name}"
+                                            );
 
                                             $bts = $db->listAll("business_types");                                            
                                             foreach ($bts as $record) {
-                                                $template = fillTemplate($businessTypeTemplate, "{business_type_id}", $db->getField($record, "id"));
-                                                $template = fillTemplate($template, "{business_type_name}", $db->getField($record, "name"));
-                                                
+                                                $data = array(
+                                                    "id" => $db->getField($record, "id"),
+                                                    "name" => $db->getField($record, "name")
+                                                );
+                                                $template = fillTemplateWithData($businessTypeTemplate, $placeholders, $data);
                                                 echo $template;
                                             }
                                             
-                                            ?>
-                                	</select>
-                                    <!-- <div class="position-relative form-group"><label for="businessTypes" class="">Business type (may be multiple)</label>
+                                        ?>
+                            </select>
+                            <!-- <div class="position-relative form-group"><label for="businessTypes" class="">Business type (may be multiple)</label>
                                         <select multiple="" name="selectMulti" id="businessTypes" class="form-control"></select>
                                     </div>   -->
-                                    <!-- <div class="position-relative form-check"><input name="check" id="exampleCheck" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label">Check me out</label></div> -->
-                                    <button id="add-company" class="mt-2 btn btn-primary">Add Company</button>
+                            <!-- <div class="position-relative form-check"><input name="check" id="exampleCheck" type="checkbox" class="form-check-input"><label for="exampleCheck" class="form-check-label">Check me out</label></div> -->
+                            <button id="add-company" class="mt-2 btn btn-primary">Add Company</button>
 
-                                    <!-- <script>
+                            <!-- <script>
                                         document.getElementById("add-company").addEventListener("click", () => {
                                             var inputs = document.forms['new-company-form'].getElementsByTagName("input");
                                             Array.from(inputs).forEach((input) =>  {
@@ -97,16 +111,16 @@ init_dashboard(Template::header($pageName, $templateDir));
                                             }); 
                                         });
                                     </script> -->
-                                    
-                                    
-                                </form>
-                            </div>
-                        </div>
+
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+</div>
 
 <?php
     echo Template::footer($templateDir);

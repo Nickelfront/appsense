@@ -15,6 +15,7 @@ class Template {
 
     public static function content($templateDir, $templateFileName) {
         return self::getTemplate(getBaseDir($templateDir) . $templateFileName);
+        // include_once getBaseDir($templateDir) . $templateFileName;
     }
 
     private static function getTemplate($templateFile) {

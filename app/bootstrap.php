@@ -1,8 +1,8 @@
-<!-- Includes all required imports -->
 <?php
 // include "template.php";
 
 use app\DataBase\DB;
+use entity\User;
 
 include "helper.php";
 include "session-loader.php";
@@ -27,3 +27,6 @@ spl_autoload_register(function ($class_name) {
 $db = new DB();
 
 session_start();
+if (isset($_SESSION['id'])) {
+    $currentUser = new User($_SESSION['id']);
+}
