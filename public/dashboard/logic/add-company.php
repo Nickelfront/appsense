@@ -2,7 +2,7 @@
 include_once "../../../app/bootstrap.php";
 
 use app\DataBase\DB;
-use util\Company;
+use entity\Company;
 
 $redirect = "../add-company.php?companyAdded=";
 
@@ -18,7 +18,8 @@ $companyDetails = $_POST;
 $companyDetails['owner_id'] = $_SESSION['userData']['id'];
 
 $db = new DB();
-$db->createCompany($companyDetails);
+// $db->createCompany($companyDetails);
+Company::insertInDB($companyDetails, $db);
 
 $_GET['companyAdded'] = "success";
 returnToPage($redirect . $_GET['companyAdded']);

@@ -1,8 +1,9 @@
 <?php
 include_once "../../../app/bootstrap.php";
 
-use app\DataBase\DB;
-use util\Company;
+use entity\Employee;
+use entity\Position;
+use entity\User;
 
 $redirect = "../add-employee.php?employeeAdded=";
 
@@ -15,6 +16,10 @@ foreach($_POST as $key => $value) {
         } 
     }
 } 
+$position = new Position($_POST['position']);
+$isHR = strpos($position->get('name'), "HR ") != -1;
+
+$userTypeId = $isHR ? 2 : 3;
 
 $tempPass = generateRandomString();
 $userData = array(
@@ -25,26 +30,25 @@ $userData = array(
     password_hash("123", PASSWORD_BCRYPT),
     null,
     $_POST['phone'],
-    2 //TODO dont hardcode user type id
+    $userTypeId
 );
-// show($userData);
-$db = new DB();
-// show($db -> createUser($userData));
-$db->createUser($userData);
 
-$newUserId = $db->getUser($_POST['email'])->get('id');
-// show($newUserId->get('id'));
+// $db = new DB();
+User::insertInDB($userData, $db);
+
+$newUser = User::getUserByEmail($_POST['email']);
+// show($newUser->get('id'));
 $employeeData = array(
-    $newUserId,
+    $newUser->get('id'),
     $_POST['company'],
-//    $_POST['position'], //TODO
-    2,
+    $_POST['position'], 
     $_POST['available_days_off'],
     $_POST['work_hours_per_day'],
 );
 
 // show ($employeeData);
-$db->createEmployee($employeeData);
+Employee::insertInDB($employeeData, $db);
+
 $_GET['employeeAdded'] = "success";
 
 returnToPage($redirect . $_GET['employeeAdded']);

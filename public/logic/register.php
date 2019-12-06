@@ -1,9 +1,8 @@
 <?php
 include_once "../../app/bootstrap.php";
 
-use app\DataBase\DB;
 use util\RegistrationValidator;
-use util\Mail;
+use entity\User;
 
 if (isset($_SESSION['oldValues']))
     unset($_SESSION['oldValues']);
@@ -66,9 +65,9 @@ try {
     unset($_SESSION['errorMessages']);    
     unset($_SESSION['oldValues']);    
 
-    $db = new DB();
+    // $db = new DB();
     $userData = array($firstName, $lastName, $email, password_hash($password, PASSWORD_BCRYPT), $gender, $phone, "1");
-    $db->createUser($userData);
+    User::insertInDB($userData, $db);
 
     $endpoint = "../index.php";
     // header("location: ../contact.php");
