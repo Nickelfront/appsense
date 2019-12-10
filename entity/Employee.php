@@ -9,8 +9,13 @@ class Employee extends Entity {
         parent::__construct($employeeId);
     }
 
-    public function getUserData() {
-        return new User($this->db->getUserByEmployeeId($this->get('id')));
+    public function getPosition() {
+        return $this->db->getType("position", $this->get('position_id'));
+    }
+
+    public function getUserData() { 
+        $user = new User($this->db->getUserByEmployeeId($this->get('id')));
+        return $user;
     }
 
     static function insertInDB($newEmployeeData, $db) {
@@ -18,4 +23,8 @@ class Employee extends Entity {
         return $db->create($query, $newEmployeeData);
     }
 
+    public function getAbsences() {
+        $query = "SELECT * FROM absence_requests WHERE employee_id = " . $this->get('id');
+        return $this->db->searchInDB($query);
+    }
 }

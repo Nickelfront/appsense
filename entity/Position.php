@@ -8,7 +8,7 @@ class Position extends Entity {
         $this->tableName = "position_types";
         parent::__construct($positionId);
     }
-    
+
     static function insertInDB($newPositionData, $db) {
         $query = "INSERT INTO position_types (`name`) VALUES (";
 

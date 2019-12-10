@@ -10,11 +10,14 @@ $requestingEmployee = $currentUser->getEmployeeData();
 $requestData['employee_id'] = $requestingEmployee->get('id');
 
 if (!isset($requestData['substitute']) || $requestData['substitute'] == "null") {
-    $requestData['substitute'] = null;
+    unset($requestData['substitute']);
 }
 if (!isset($requestData['absence-document']) || $requestData['absence-document'] == "") {
     $requestData['absence-document'] = null;
 }
+
+// $requestData['']
+// show($requestData);
 
 AbsenceRequest::insertInDB($requestData, $db);
 $company = new Company($requestingEmployee->get('company_id'));

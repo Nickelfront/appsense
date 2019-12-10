@@ -40,3 +40,15 @@ function fillTemplateWithData(string $template, array $placeholders, array $data
 function returnToPage($pathToPage) {
     header("location: $pathToPage");    
 }
+
+function datediffInWeeks($date1, $date2)
+{
+    if($date1 > $date2) return datediffInWeeks($date2, $date1);
+    $first = DateTime::createFromFormat('Y-m-d H:i:s', $date1);
+    $second = DateTime::createFromFormat('Y-m-d H:i:s', $date2);
+    return floor($first->diff($second)->days/7);
+}
+
+function stringifyAllTableFields($data) : string {
+    return implode(",", array_keys($data)); 
+}

@@ -10,8 +10,10 @@ $templateDir = "public/dashboard";
 //     header("location: index.php");
 // }
 
+if (!isset($_GET['id']) && $currentUser->get('user_type_id') == 1) {
+    returnToPage("companies.php");
+}
 init_dashboard($currentUser, Template::header($pageName, $templateDir));
-
 // $company = $db->getCompany($_GET['id']);
 
 ?>
@@ -42,17 +44,19 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
 
-<script src="./assets/fullcalendar-4.3.1/packages/timegrid/main.min.js"></script>
+<script src="./assets/fullcalendar-4.3.1/packages/core/main.js"></script>
+<script src="./assets/fullcalendar-4.3.1/packages/daygrid/main.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('absence-calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             plugins: ['dayGrid'],
+             defaultView: 'dayGridWeek',
             // defaultView: 'timeGridWeek',
             timeZone: 'local',
             defaultDate: new Date().getTime(), // will be parsed as local
@@ -61,9 +65,11 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                 url: '../endpoints/company-absences.php',
                 method: 'POST',
                 extraParams: {
-                    user_token: "<?php echo $_SESSION['userData']['login_token']; ?>"
+                    "user-token": "<?php echo $_SESSION['login_token']; ?>",
+                    "company-id": "<?php echo (isset($_GET['id']) ? $_GET['id'] : ''); ?>"
                 },
-                failure: function () {
+                failure: function (event) {
+                    console.log(event);
                     alert('there was an error while fetching events!');
                 },
                 color: 'blue', // a non-ajax option

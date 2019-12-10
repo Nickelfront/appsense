@@ -1,18 +1,25 @@
 <?php
 
-/**
- * initialize session and fill placeholders with user data
- */
+use util\Template;
 
 function init_dashboard($currentUser, $header) {
-    // session_start();
-    // show($_SESSION);
+    if ($currentUser == null) {
+        returnToPage("../forbidden.php");
+        die();
+    }
+    if ($currentUser->get('user_type_id') == 1) {
+        $sidebarContent = "company-dashboard.php";
+    } else {
+        $sidebarContent = "employee-dashboard.php";
+    }
 
+    $sidebar = Template::content("../public/dashboard/", $sidebarContent);
+    
     $cluFirstName = $currentUser->get('first_name');
     $cluLastName = $currentUser->get('last_name');
     $cluPosition = $currentUser->get('position');
 
-    $cluAvatarSrc = "https://eu.ui-avatars.com/api/?name=$cluFirstName+$cluLastName"; // TODO set this if avatar is NULL
+    $cluAvatarSrc = "https://eu.ui-avatars.com/api/?name=$cluFirstName+$cluLastName"; 
     if ($currentUser->get('avatar')) {
         $cluAvatarSrc = $currentUser->get('avatar');
     }
@@ -22,5 +29,5 @@ function init_dashboard($currentUser, $header) {
     $header = str_replace("{clu_position}", $cluPosition, $header);
     $header = str_replace("{clu_avatar}", $cluAvatarSrc, $header);
     
-    echo $header;
+    echo $header . $sidebar;
 }

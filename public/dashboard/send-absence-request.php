@@ -2,12 +2,14 @@
 include_once "../../app/bootstrap.php";
 
 use Util\Template;
-use util\User;
 
 $pageName = "New Absence Request";
 $templateDir = "public/dashboard"; 
 
 init_dashboard($currentUser, Template::header($pageName, $templateDir));
+// if ($currentUser->get('user_type_id')) {
+//     returnToPage("index.php");
+// }
 
 ?>
 
@@ -133,18 +135,16 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     "name" => "{substitute_name}",
                                 );
 
-                                $userColleagues = $db->listAllEmployees($user->get('company_id'));
+                                $userColleagues = $currentUser->getColleaguesWithThisPosition();
                                 foreach ($userColleagues as $colleague) {
                                     //TODO also check if employee isnt absent too within given period
-                                    if ($colleague['position_id'] == $user->get('position_id') && $colleague['id'] != $user->get('id')) {
-                                        $substituteUserData = $db->findRecord("users", "id = '" . $colleague['user_id'] ."'");
-                                        $substituteUserData = array(
-                                            "id" => $colleague['id'],
-                                            "name" => $substituteUserData['first_name'] . " " . $substituteUserData['last_name']
-                                        );
-                                        $substituteOption = fillTemplateWithData($substitutePlaceholder, $placeholders, $substituteUserData);
-                                        echo $substituteOption;
-                                    }
+                                    $substituteUserData = $db->findRecord("users", "id = '" . $colleague['user_id'] ."'");
+                                    $substituteUserData = array(
+                                        "id" => $colleague['id'],
+                                        "name" => $substituteUserData['first_name'] . " " . $substituteUserData['last_name']
+                                    );
+                                    $substituteOption = fillTemplateWithData($substitutePlaceholder, $placeholders, $substituteUserData);
+                                    echo $substituteOption;
                                 }
 
                             ?>

@@ -8,15 +8,13 @@ use Util\Template;
 $pageName = "Dashboard | User details";
 $templateDir = "public/dashboard"; 
 
+$userId = isset($_GET['id']) ? $_GET['id'] : $currentUser->get('id');
+if (!$currentUser->isInCompany($userId)) {
+    returnToPage("user-details.php");
+}
 init_dashboard($currentUser, Template::header($pageName, $templateDir));
 
-$userId = isset($_GET['id']) ? $_GET['id'] : $currentUser->get('id');
-if (!$currentUser->isColleague($userId)) {
-    returnToPage("../forbidden.php");
-}
 $user = new User($userId);
-
-
 $icon = $user->get('id') == $currentUser->get('id') ? "user" : "id"
 
 ?>
@@ -63,7 +61,7 @@ $icon = $user->get('id') == $currentUser->get('id') ? "user" : "id"
                             <div class="widget-content-wrapper">
                                 <div class="widget-content-left mr-3">
                                     <div class="widget-content-left">
-                                        <img width="100" class="rounded-circle" src="<?php echo $user->get('avatar') ?>"
+                                        <img width="100" class="rounded-circle" src="<?php echo $user->get('avatar') ? $user->get('avatar') : 'https://eu.ui-avatars.com/api/?name=' . $user->get('first_name') . '+' . $user->get('last_name') ?>"
                                             alt="">
                                     </div>
                                 </div>
@@ -95,11 +93,12 @@ $icon = $user->get('id') == $currentUser->get('id') ? "user" : "id"
                             </div>
                         </div>
                         <ul class="list-group" style="margin-top: 10px">
-                            <li class="list-group-item">Work hours a day:
-                                <?php 
-                                  echo $user->get('work_hours_a_day'); 
-                                ?>
-                            </li>
+                            <?php 
+                                $workHoursHTML = '<li class="list-group-item">Work hours a day:' . $user->get('work_hours_a_day') . "</li>"; 
+                                if ($currentUser->get('user_type_id') > 1) {
+                                    echo $workHoursHTML;
+                                }
+                            ?>
                             <li class="list-group-item">Created at:
                                 <?php 
                                     echo $user->get('created_at');

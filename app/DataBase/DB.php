@@ -34,7 +34,7 @@ class DB {
 
     public function create($query, $data) {
         $query = $this->addDataToQuery($query, $data);
-        // show($query);
+        // show($quer`y);
         // echo $query;
         return $this->execute($query);
     }
@@ -42,8 +42,8 @@ class DB {
     public function createAbsenceRequestNotification(array $notificationData) {
         $query = "INSERT INTO absence_request_notifications (`from_user_id`, `to_user_id`, `absence_request_id`) VALUES (";
         $query = $this->addDataToQuery($query, $notificationData);
-        show($query);
-        $this->execute($query);
+        // show($query);
+        return $this->execute($query);
     }
 
     private function addDataToQuery(string $query, array $data) {
@@ -64,6 +64,12 @@ class DB {
         return $result['id'];
     }
  
+    public function getUserIdByToken($token) {
+        $query = "SELECT id FROM users WHERE login_token = '$token'";
+
+        $result = $this->getFirstResult($query);
+        return $result['id'];
+    }
     public function getUserField($userId, $requiredField)
     {
         $userData = $this->getUserData($userId);
@@ -139,7 +145,9 @@ class DB {
      *  */    
     public function listHRsForCompany($companyId) {
         $hrResults = array();
-        $hrResults = $this->searchInDB("SELECT id FROM employees WHERE company_id = $companyId AND position_id = 2");
+        $query = "SELECT e.id FROM employees e JOIN users u ON e.user_id = u.id WHERE company_id = $companyId AND user_type_id = 2";
+        // show($hrResults);
+        $hrResults = $this->searchInDB($query);      
         return $hrResults;
     }
 
@@ -164,7 +172,7 @@ class DB {
      * Returns all records that match a SELECT SQL query.
      * @return array of search results
      */
-    private function searchInDB($query) {
+    public function searchInDB($query) {
         return $this->connection->query($query)->fetchAll();
     }
 

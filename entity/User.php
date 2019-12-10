@@ -11,10 +11,15 @@ class User extends Entity {
         parent::__construct($userId);
         // $this->data = $this->db->getUserData($userId);
     }
+    
+    public function getUserType() {
+        return $this->db->getType("user", $this->get('user_type_id'));
+    }
 
     public function getCompanies() {
-        $companies = array();
+        $companies = null;
         if ($this->get('user_type_id') == 1) {
+            $companies = array();
             $results = $this->db->getUserCompanies($this->get('id'));
             foreach($results as $result) {
                 $companies[] = new Company($result['id']);
@@ -31,12 +36,41 @@ class User extends Entity {
         return new User($db->getUserIdByEmail($userEmail));
     }
 
-    static function insertInDB($newUserData, $db) {
+    public static function getUserByToken($userToken) {
+        $db = new DB();
+        return new User($db->getUserIdByToken($userToken));
+    }
+
+    public static function insertInDB($newUserData, $db) {
         $query = "INSERT INTO users (`first_name`, `last_name`, `email`, `password`, `gender`, `phone`, `user_type_id`) VALUES (";        
         return $db->create($query, $newUserData);
     }
 
-    public function isColleague($userId) {
+    public function getColleagues() {
+        $companyId = $this->getEmployeeData()->get('company_id');
+        $colleagues = $this->db->listAllEmployees($companyId);
+        
+        // show($colleagues);
+        // foreach ($colleagues as $colleague) {
+        //     if ($colleague->get('id') == $this->get('id')) {
+        //         $
+        //     }
+        // }
+        return $colleagues;
+    }
+
+    public function getColleaguesWithThisPosition() {
+        $colleagues = $this->getColleagues();
+        $colleaguesWithThisPosition = array();
+        foreach ($colleagues as $colleague) {
+            if ($colleague['position_id'] == $this->getEmployeeData()->get('position_id')) {
+                $colleaguesWithThisPosition[] = $colleague;
+            }
+        }
+        return $colleaguesWithThisPosition;
+    }
+
+    public function isInCompany($userId) {
         if ($userId == $this->get('id')) {
             return true;
         }
@@ -54,12 +88,12 @@ class User extends Entity {
             }
             return $isEmployee;
         } else {
-            $company = new Company($this->get('company_id'));
+            // $company = new Company($this->e('company_id'));
             
-            $colleagues = $company->getAllEmployees();
+            $colleagues = $this->getColleagues();
             $isColleague = false;
             foreach($colleagues as $colleague) {
-                if ($colleague->get('id') == $userId) {
+                if ($colleague['id'] == $userId) {
                     $isColleague = true;
                     break;
                 }
@@ -67,6 +101,5 @@ class User extends Entity {
             return $isColleague;
         }
     }
-
 
 } 
