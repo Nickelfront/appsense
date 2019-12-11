@@ -1,6 +1,7 @@
 <?php
 include_once "../../app/bootstrap.php";
 
+use entity\Employee;
 use Util\Template;
 
 $pageName = "Dashboard";
@@ -189,12 +190,12 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                     <div class="card-header-tab card-header-tab-animation card-header">
                         <div class="card-header-title">
                             <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                            Sales Report
+                            Absence Stats from all Companies
                         </div>
                         <ul class="nav">
-                            <li class="nav-item"><a href="javascript:void(0);" class="active nav-link">Last</a></li>
-                            <li class="nav-item"><a href="javascript:void(0);"
-                                    class="nav-link second-tab-toggle">Current</a></li>
+                            <!-- <li class="nav-item"><a href="javascript:void(0);" class="active nav-link">Last</a></li> -->
+                            <!-- <li class="nav-item"><a href="javascript:void(0);"
+                                    class="nav-link second-tab-toggle">Current</a></li> -->
                         </ul>
                     </div>
                     <div class="card-body">
@@ -211,7 +212,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                 <div class="scroll-area-sm">
                                     <div class="scrollbar-container">
                                         <ul class="rm-list-borders rm-list-borders-scroll list-group list-group-flush">
-                                            <?php
+                                        <?php
                                                 $template = '<li class="list-group-item">
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">
@@ -225,114 +226,45 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                                         </div>
                                                         <div class="widget-content-right">
                                                             <div class="font-size-xlg text-muted">
-                                                                <span>{employee_used_days_off}</span>
+                                                                <span>{employee_absence_count}</span>
                                                                 <small class="text-warning pl-2">
-                                                                    <i class="fa fa-{employee_most_absences}"></i>
+                                                                    <i class="fa fa-sun"></i>
                                                                 </small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>';
+                                            $placeholders = array(
+                                                "name" => "{employee_name}",
+                                                "avatar" => "{employee_avatar}",
+                                                "position" => "{employee_position}",
+                                                "count" => "{employee_absence_count}",
+                                                // "type" => "{absence_type}"
+                                            );
 
-                                            $companies = $currentUser->getCompanies();
-                                            foreach ($companies as $company) {
-                                                
+                                            $query = "SELECT e.id FROM employees e JOIN companies c ON e.company_id = c.id WHERE c.owner_id = " . $currentUser->get('id') . " ORDER BY used_days_off DESC LIMIT 5";
+                                            $results = $db->searchInDB($query);
+                                                // show($results);
+
+                                            foreach ($results as $result) {
+                                                // var_dump($result);
+                                                // continue;
+                                                $employee = new Employee($result['id']);
+                                                $userData = $employee->getUserData();
+                                                // show($employee);
+                                                $firstName = $userData->get('first_name');
+                                                $lastName = $userData->get('last_name');
+                                                $employeeName = $firstName . " " . $lastName;
+                                                $employeeData = array(
+                                                    "name" => $employeeName,
+                                                    "avatar" => "https://eu.ui-avatars.com/api/?name=$firstName+$lastName",
+                                                    "position" => $employee->getPosition(),
+                                                    "count" => $employee->get('used_days_off'),
+                                                );
+                                                echo fillTemplateWithData($template, $placeholders, $employeeData);
                                             }
-
                                             ?>
-                                            <li class="list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper">
-                                                        <div class="widget-content-left mr-3">
-                                                            <img width="42" class="rounded-circle"
-                                                                src="assets/images/avatars/5.jpg" alt="">
-                                                        </div>
-                                                        <div class="widget-content-left">
-                                                            <div class="widget-heading">Ruben Tillman</div>
-                                                            <div class="widget-subheading">UI Designer</div>
-                                                        </div>
-                                                        <div class="widget-content-right">
-                                                            <div class="font-size-xlg text-muted">
-                                                                <small class="opacity-5 pr-1">$</small>
-                                                                <span>54</span>
-                                                                <small class="text-success pl-2">
-                                                                    <i class="fa fa-angle-up"></i>
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper">
-                                                        <div class="widget-content-left mr-3">
-                                                            <img width="42" class="rounded-circle"
-                                                                src="assets/images/avatars/4.jpg" alt="">
-                                                        </div>
-                                                        <div class="widget-content-left">
-                                                            <div class="widget-heading">Vinnie Wagstaff</div>
-                                                            <div class="widget-subheading">Java Programmer</div>
-                                                        </div>
-                                                        <div class="widget-content-right">
-                                                            <div class="font-size-xlg text-muted">
-                                                                <small class="opacity-5 pr-1">$</small>
-                                                                <span>429</span>
-                                                                <small class="text-warning pl-2">
-                                                                    <i class="fa fa-dot-circle"></i>
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper">
-                                                        <div class="widget-content-left mr-3">
-                                                            <img width="42" class="rounded-circle"
-                                                                src="assets/images/avatars/3.jpg" alt="">
-                                                        </div>
-                                                        <div class="widget-content-left">
-                                                            <div class="widget-heading">Ella-Rose Henry</div>
-                                                            <div class="widget-subheading">Web Developer</div>
-                                                        </div>
-                                                        <div class="widget-content-right">
-                                                            <div class="font-size-xlg text-muted">
-                                                                <small class="opacity-5 pr-1">$</small>
-                                                                <span>129</span>
-                                                                <small class="text-danger pl-2">
-                                                                    <i class="fa fa-angle-down"></i>
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <div class="widget-content p-0">
-                                                    <div class="widget-content-wrapper">
-                                                        <div class="widget-content-left mr-3">
-                                                            <img width="42" class="rounded-circle"
-                                                                src="assets/images/avatars/2.jpg" alt="">
-                                                        </div>
-                                                        <div class="widget-content-left">
-                                                            <div class="widget-heading">Ruben Tillman</div>
-                                                            <div class="widget-subheading">UI Designer</div>
-                                                        </div>
-                                                        <div class="widget-content-right">
-                                                            <div class="font-size-xlg text-muted">
-                                                                <small class="opacity-5 pr-1">$</small>
-                                                                <span>54</span>
-                                                                <small class="text-success pl-2">
-                                                                    <i class="fa fa-angle-up"></i>
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -375,90 +307,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                             </div>
                             <div class="pt-2 card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">63%</div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Generated Leads</div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-danger" role="progressbar"
-                                                            aria-valuenow="63" aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 63%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">32%</div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Submitted Tickers</div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-success" role="progressbar"
-                                                            aria-valuenow="32" aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 32%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">71%</div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Server Allocation</div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-primary" role="progressbar"
-                                                            aria-valuenow="71" aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 71%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="widget-content">
-                                            <div class="widget-content-outer">
-                                                <div class="widget-content-wrapper">
-                                                    <div class="widget-content-left">
-                                                        <div class="widget-numbers fsize-3 text-muted">41%</div>
-                                                    </div>
-                                                    <div class="widget-content-right">
-                                                        <div class="text-muted opacity-6">Generated Leads</div>
-                                                    </div>
-                                                </div>
-                                                <div class="widget-progress-wrapper mt-1">
-                                                    <div class="progress-bar-sm progress-bar-animated-alt progress">
-                                                        <div class="progress-bar bg-warning" role="progressbar"
-                                                            aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"
-                                                            style="width: 41%;"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -469,89 +318,100 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
     </div>
 
     <script>
-    $(document).ready( () => {
-        var config = {
-            headers: {
-                "user-token": "<?php echo $_SESSION['login_token']; ?>"
-            }
+    var config = {
+        headers: {
+            "user-token": "<?php echo $_SESSION['login_token']; ?>"
         }
+    }
+    $(document).ready( () => {
 
-        var absencesData;
-
-        var absencesChartEl = document.getElementById('most-absences').getContext('2d');
+        var absencesChartEl = document.querySelector('#most-absences').getContext('2d');
         var absencesChart = new Chart(absencesChartEl, {
             type: 'bar',
             data: {
-                label: ['Red', 'Blue', 'Orange', 'Green'],
-                data: absencesData,
-                xAxes: [{
-                    type: 'time',
-                    time: {
-                        displayFormats: {
-                            quarter: 'MMM YYYY'
-                        }
-                    }
-                }]
+                labels: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                datasets: [{
+                    
+                    data: [],
+                    backgroundColor: [
+                        'rgba(44, 200, 77, 0.8)',
+                        'rgba(205, 0, 26, 0.8)',
+                        'rgba(255, 215, 0, 0.8)',
+                        'rgba(113, 197, 232, 0.8)'
+                    ]
+                }],
             },
             options: {
+                legend: {
+                    display: false
+                },
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            // beginAtZero: true
+                            min: 0,
+                            stepSize: 1
                         }
                     }]
                 }
             }
         });
 
-        getAbsenceStats();
+        getAbsenceStats(absencesChart);
         getStats();
 
-        function getStats() {
-            axios.get('../endpoints/totals.php', config)
-                .then(function (response) {
-                    // handle success
-                    document.querySelector("#totalAbsences").innerHTML = response.data.totalAbsences;
-                    document.querySelector("#totalPendingRequests").innerHTML = response.data.totalPendingRequests;
-                    document.querySelector("#totalWorkHours").innerHTML = response.data.totalWorkHours;
-                    // console.log(response.data);
-                })
-                .catch(function (error) {
-                    // handle error
-                    document.querySelector("#totalAbsences").innerHTML = "N/A";
-                    document.querySelector("#totalPendingRequests").innerHTML = "N/A";
-                    document.querySelector("#totalWorkHours").innerHTML = "N/A";
-                    // console.log(error);
-                })
-                .finally(function () {
-                    setTimeout(getStats, 20000);
-                }
-            );
-        }
-        
-        function getAbsenceStats() {
-            axios.get('../endpoints/absence_types_stats.php', config)
-                .then(function (response) {
-                    // handle success
-                    // document.querySelector("#totalAbsences").innerHTML = response.data.totalAbsences;
-                    // document.querySelector("#totalPendingRequests").innerHTML = response.data.totalPendingRequests;
-                    // document.querySelector("#totalWorkHours").innerHTML = response.data.totalWorkHours;
-                    absencesData = response.data;
-                    console.log(absencesData);
-                })
-                .catch(function (error) {
-                    // handle error
-                    // document.querySelector("#totalAbsences").innerHTML = "N/A";
-                    // document.querySelector("#totalPendingRequests").innerHTML = "N/A";
-                    // document.querySelector("#totalWorkHours").innerHTML = "N/A";
-                    console.log(error);
-                })
-                .finally(function () {
-                    setTimeout(getAbsenceStats, 20000);
-                }
-            );
-        }
     });
+
+
+    function getStats() {
+        axios.get('../endpoints/totals.php', config)
+            .then(function (response) {
+                // handle success
+                $("#totalAbsences").text(response.data.totalAbsences);
+                $("#totalPendingRequests").text(response.data.totalPendingRequests);
+                $("#totalWorkHours").text(response.data.totalWorkHours);
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                // handle error
+                $("#totalAbsences").text("N/A");
+                $("#totalPendingRequests").text("N/A");
+                $("#totalWorkHours").text("N/A");
+                console.log(error);
+            })
+            .finally(function () {
+                setTimeout(getStats, 20000);
+            }
+        );
+    }
+    
+    function getAbsenceStats(absenceChart) {
+        axios.get('../endpoints/absence_types_stats.php', config)
+            .then(function (response) {
+                // handle success
+                var absences = response.data;
+                console.log(absences);
+                console.log(absenceChart.data.datasets);
+                
+                absenceChart.data.datasets[0].data.push(absences.vacation);
+                absenceChart.data.datasets[0].data.push(absences.sickness);
+                absenceChart.data.datasets[0].data.push(absences.school);
+                absenceChart.data.datasets[0].data.push(absences.home);
+                
+                absenceChart.update();
+            })
+            .catch(function (error) {
+                // handle error
+                // document.querySelector("#totalAbsences").innerHTML = "N/A";
+                // document.querySelector("#totalPendingRequests").innerHTML = "N/A";
+                // document.querySelector("#totalWorkHours").innerHTML = "N/A";
+                console.log(error);
+            })
+            .finally(function () {
+                setTimeout(getAbsenceStats, 20000);
+            }
+        );
+    }
    
     </script>
 
