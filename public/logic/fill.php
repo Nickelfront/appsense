@@ -1,6 +1,6 @@
 <?php
 include_once "../../app/bootstrap.php";
-$query = "SELECT id FROM users where user_type_id <> 1";
+$query = "SELECT e.id FROM employees e JOIN users u ON e.user_id = u.id where user_type_id <> 1";
 // $hrs = $db->searchInDB("SELECT e.`id` FROM `users` u JOIN `employees` e ON e.`user_id` = u.`id` WHERE `user_type_id` <> 1");
 $hrs =  $db->searchInDB($query);
 $counter = 0;
