@@ -73,7 +73,7 @@ $company = new Company($_GET['id']);
                                         </div>
                                         <div class="widget-content-left flex2">
                                             <div class="widget-content-left flex2">
-                                                <p>Total workers: <?php echo count($company->getAllEmployees()); ?></p>
+                                                <p>Total employees: <?php echo count($company->getAllEmployees()); ?></p>
 
                                             </div>
                                         </div>

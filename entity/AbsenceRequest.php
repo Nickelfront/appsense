@@ -15,4 +15,15 @@ class AbsenceRequest extends Entity {
         return $db->create($query, $newAbsenceData);
     }
 
+    public function notfiyHRs() {
+    	// get HRs
+    	$absenceRequest = array(
+    		"for_user_id" => null,
+    		"from_user_id" => $this->get('employee_id')->getUserData()->get('id'),
+    		"absence_request_id" => $this->get('id')
+    	);
+    	$query = "INSERT INTO absence_requests_notifications (for_user_id, from_user_id, absence_request_id) VALUES(";
+    	$this->db->create();
+    }
+
 }
