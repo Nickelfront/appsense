@@ -128,10 +128,28 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                         }
                     ?>
                     </div>
-                    <div class="d-block text-center card-footer">
+                    <div class=" card-footer row">
                         <!-- <button class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-trash btn-icon-wrapper"> </i></button> -->
-                        <button class="btn-wide btn btn-info" onclick="window.open('add-company.php', '_self');">Add new
+                        <div class="col-md-4"></div>
+
+                        <div class="col-md-4">
+                            <button class="btn-wide btn btn-info" onclick="window.open('add-company.php', '_self');">Add new
                             company</button>
+                        </div>
+
+                        <nav class="col-md-4" aria-label="Page navigation example">
+                            <ul class="pagination float-right">
+                                <li class="page-item">
+                                    <a href="javascript:void(0);" class="page-link" aria-label="Previous"><span aria-hidden="true">«</span><span class="sr-only">Previous</span></a>
+                                </li>
+                                <li class="active page-item">
+                                    <a href="javascript:void(0);" class="page-link">1</a>
+                                </li>
+                                <li class="page-item"><a href="javascript:void(0);" class="page-link" aria-label="Next">
+                                    <span aria-hidden="true">»</span><span class="sr-only">Next</span></a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

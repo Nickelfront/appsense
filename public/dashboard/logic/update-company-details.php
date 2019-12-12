@@ -13,11 +13,12 @@ $newValues['status'] = $_POST['companyStatus'];
 
 // show($newValues);
 foreach ($newValues as $key => $value) {
-	if ($value == null || $value = "") {
+	if ($value == null || $value == "" ) {
 		$result = "fail";
 		break;
 	}
     if ($company->get($key) != $value) {
+    	// show($value);
         $company->updateField($key, $value);
         $result = "success";
     } 

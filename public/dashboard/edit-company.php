@@ -4,7 +4,7 @@ include_once "../../app/bootstrap.php";
 use entity\Company;
 use Util\Template;
 
-$pageName = "Dashboard | Company details";
+$pageName = "Dashboard | Edit company details";
 $templateDir = "public/dashboard"; 
 
 if (!isset($_GET['id'])) {

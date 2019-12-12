@@ -43,15 +43,18 @@
 					</span>
 
 					<?php
-						if (isset($_GET['incorrect'])) {
-							$message = "Incorrect credentials.";
-						} if (isset($_GET['already-logged-in'])) {
-							$message = "You've already been logged in from another device. Please logout there first and try again.";
-						} if (isset($_GET['inactive-company'])) {
-							$message = "It seems that the company you work for has been deactivated. Please contact the company's owner."
-						}
+						if (isset($_GET)) {
+							$message = "";
+							if (isset($_GET['incorrect'])) {
+								$message = "Incorrect credentials.";
+							} if (isset($_GET['already-logged-in'])) {
+								$message = "You've already been logged in from another device. Please logout there first and try again.";
+							} if (isset($_GET['inactive-company'])) {
+								$message = "It seems that the company you work for has been deactivated. Please contact the company's owner.";
+							}
 
-						echo '<span class="text-center txt1" style="color: red; display: block;">' . $message . '</span>';
+							echo '<span class="text-center txt1" style="color: red; display: block;">' . $message . '</span>';
+						}
 					?>
 						
 					<!-- <span class="txt1" style="color: red; background-color: orange; display: none">

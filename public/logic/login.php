@@ -11,8 +11,11 @@ $correctPass = verifyUser($db, $userEmail, $_POST['pass']);
 
 if ($correctPass) {
     $loggedInUser = User::getUserByEmail($userEmail);
-    if ($loggedInUser->getEmployeeCompany()->get('status') != 'active') {
-        $endpoint = "../login.php?inactive-company";
+    
+    if ($loggedInUser->get('user_type_id') > 1) {
+        if ($loggedInUser->getEmployeeCompany()->get('status') != 'active') {
+            $endpoint = "../login.php?inactive-company";
+        }
     } else {
         $existingToken = ($loggedInUser->get('login_token') != null || $loggedInUser->get('login_token') != "");
         if ($existingToken) {

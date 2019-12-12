@@ -125,7 +125,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     </td>
                                     <td class="text-center">
                                     <button type="button" onclick="location.href=`company-details.php?id={clu_company_id}`" id="details_{clu_company_id}" class="details-btn btn btn-outline-info btn-sm">Details</button>
-                                    <button class="mr-2 btn-icon btn-icon-only btn btn-primary"><i class="pe-7s-pen btn-icon-wrapper"></i></button>
+                                    <button type="button" onclick="location.href=`edit-company.php?id={clu_company_id}`" class="mr-2 btn-icon btn-icon-only btn btn-primary"><i class="pe-7s-pen btn-icon-wrapper"></i></button>
                                     </td>
                                 </tr>'; 
                                 
@@ -248,11 +248,8 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                                 // show($results);
 
                                             foreach ($results as $result) {
-                                                // var_dump($result);
-                                                // continue;
                                                 $employee = new Employee($result['id']);
                                                 $userData = $employee->getUserData();
-                                                // show($employee);
                                                 $firstName = $userData->get('first_name');
                                                 $lastName = $userData->get('last_name');
                                                 $employeeName = $firstName . " " . $lastName;
@@ -412,6 +409,80 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             }
         );
     }
+
+
+        // var barChartData = {
+        //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        //     datasets: [{
+        //         label: 'Dataset 1',
+        //         backgroundColor: [
+        //             window.chartColors.red,
+        //             window.chartColors.orange,
+        //             window.chartColors.yellow,
+        //             window.chartColors.green,
+        //             window.chartColors.blue,
+        //             window.chartColors.purple,
+        //             window.chartColors.red
+        //         ],
+        //         yAxisID: 'y-axis-1',
+        //         data: [
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor()
+        //         ]
+        //     }, {
+        //         label: 'Dataset 2',
+        //         backgroundColor: window.chartColors.grey,
+        //         yAxisID: 'y-axis-2',
+        //         data: [
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor(),
+        //             randomScalingFactor()
+        //         ]
+        //     }]
+
+        // };
+
+        //     var ctx = document.getElementById('canvas').getContext('2d');
+        //     window.myBar = new Chart(ctx, {
+        //         type: 'bar',
+        //         data: barChartData,
+        //         options: {
+        //             responsive: true,
+        //             title: {
+        //                 display: true,
+        //                 text: 'Chart.js Bar Chart - Multi Axis'
+        //             },
+        //             tooltips: {
+        //                 mode: 'index',
+        //                 intersect: true
+        //             },
+        //             scales: {
+        //                 yAxes: [{
+        //                     type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+        //                     display: true,
+        //                     position: 'left',
+        //                     id: 'y-axis-1',
+        //                 }, {
+        //                     type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+        //                     display: true,
+        //                     position: 'right',
+        //                     id: 'y-axis-2',
+        //                     gridLines: {
+        //                         drawOnChartArea: false
+        //                     }
+        //                 }],
+        //             }
+        //         }
+        //     });
    
     </script>
 

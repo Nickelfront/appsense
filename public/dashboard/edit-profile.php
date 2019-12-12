@@ -4,7 +4,7 @@ include_once "../../app/bootstrap.php";
 use entity\Company;
 use Util\Template;
 
-$pageName = "Dashboard | User details";
+$pageName = "Dashboard | Edit your details";
 $templateDir = "public/dashboard"; 
 
 init_dashboard($currentUser, Template::header($pageName, $templateDir));
