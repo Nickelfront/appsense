@@ -29,9 +29,17 @@ class User extends Entity {
         } return $companies;
     }
 
+    public function getEmployeeCompany() {
+        $company = null;
+        if ($this->get('user_type_id') > 1){
+            $company = new Company($this->getEmployeeData()->get('company_id'));
+        } return $company;
+    }
+
     public function getEmployeeData() {
         $query = "SELECT id FROM employees WHERE user_id = " . $this->get('id');
-        $employeeId = $this->db->searchInDB($query);
+        $employeeId = $this->db->getFirstResult($query)['id'];
+        // show($employeeId);
         return new Employee($employeeId);
     }
 
@@ -51,15 +59,10 @@ class User extends Entity {
     }
 
     public function getColleagues() {
-        $companyId = $this->getEmployeeData()->get('company_id');
-        $colleagues = $this->db->listAllEmployees($companyId);
+        $company = new Company($this->getEmployeeData()->get('company_id'));
         
-        // show($colleagues);
-        // foreach ($colleagues as $colleague) {
-        //     if ($colleague->get('id') == $this->get('id')) {
-        //         $
-        //     }
-        // }
+        $colleagues = $company->getAllEmployees($companyId);
+        
         return $colleagues;
     }
 
@@ -83,17 +86,16 @@ class User extends Entity {
             $isEmployee = false;
             foreach ($companies as $company) {
                 $employees = $company->getAllEmployees();
+                // show($employees);
                 foreach($employees as $employee) {
-                    if ($employee->get('id') == $userId) {
-                        $isEmployee = true;
+                    if ($employee->get('user_id') == $userId) {
+                        $isEmployee     = true;
                         break;
                     }
                 }
             }
             return $isEmployee;
-        } else {
-            // $company = new Company($this->e('company_id'));
-            
+        } else {            
             $colleagues = $this->getColleagues();
             $isColleague = false;
             foreach($colleagues as $colleague) {

@@ -19,6 +19,7 @@ class DB {
 
     public function getData($tableName, $uniqueId) {
         $entityData = $this->searchInDB("SELECT * FROM $tableName WHERE id = $uniqueId")[0];
+        // show($entityData);
         return $entityData;
     }
 
@@ -177,7 +178,7 @@ class DB {
         return $this->connection->query($query)->fetchAll();
     }
 
-    private function getFirstResult($query) {
+    public function getFirstResult($query) {
         return $this->searchInDB($query)[0];
     }
 

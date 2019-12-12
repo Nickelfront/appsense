@@ -74,7 +74,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     <td class="text-center">
                                         <button type="button" onclick="location.href=`company-details.php?id={clu_company_id}`" id="details_{clu_company_id}" class="details-btn btn btn-outline-info btn-sm">Details</button>
                                         <button type="button" onclick="location.href=`calendar.php?id={clu_company_id}`" class="mr-2 btn-icon btn-icon-only btn btn-success"><i class="pe-7s-date btn-icon-wrapper"></i></button>
-                                        <button type="button" class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-pen btn-icon-wrapper"></i></button>
+                                        <button type="button" onclick="location.href=`edit-company.php?id={clu_company_id}`" class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-pen btn-icon-wrapper"></i></button>
                                     </td>
                                 </tr>'; 
                                 

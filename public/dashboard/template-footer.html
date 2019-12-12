@@ -41,8 +41,9 @@
         </div>
     
         <script>
-            let requestsNotifications = document.querySelector("#requestsNotificationCount");
-            let messagesNotifications = document.querySelector("#newMessagesCount");
+        $(document).ready(() => {
+            let requestsNotifications = $("#requestsNotificationCount");
+            let messagesNotifications = $("#newMessagesCount");
             
             //TODO ajax call
             let requestCount = 0;
@@ -52,16 +53,24 @@
             updateCount(messagesNotifications, messageCount);
             
             function updateCount(notifications, count) {
-                notifications.innerHTML = count;
+                notifications.text = count;
                 if (count == 0) {
-                    notifications.style.display = "none";
+                    notifications.css("display", "none");
                 } else {
-                    notifications.style.display = "inline-block";                
+                    notifications.css("display","inline-block");                
                 }
             }
 
             console.log(requestsNotifications);
             console.log(messagesNotifications);
+
+            $(".close").click(() => {
+                $(".alert-dismissible").removeClass("show");
+                setTimeout(() => {
+                    $(".alert-dismissible").css("display", "none");
+                }, 300);
+            });
+        });
         </script>
     </body>
 </html>

@@ -10,15 +10,6 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
 
 ?>
 
-<script>
-    var url = new URL(window.location.href);
-    var fail = url.searchParams.get("fail");
-    if (fail == "" || fail) {
-        console.log(fail);
-        // document.querySelector("body").classList.add("modal-open");
-    }
-</script>
-
 <div class="app-main__outer">
     <div class="app-main__inner">
         <div class="app-page-title">
@@ -89,502 +80,199 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                 </div>
             </div>
         </div>
-        <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
-            <li class="nav-item">
-                <a role="tab" class="nav-link active" id="tab-0" data-toggle="tab" href="#tab-content-0">
-                    <span>Basic</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a role="tab" class="nav-link" id="tab-1" data-toggle="tab" href="#tab-content-1">
-                    <span>Input Groups</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a role="tab" class="nav-link" id="tab-2" data-toggle="tab" href="#tab-content-2">
-                    <span>Custom Controls</span>
-                </a>
-            </li>
-        </ul>
+        
         <div class="tab-content">
             <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="main-card mb-3 card">
                             <div class="card-body">
                                 <h5 class="card-title">Employee Registration Form</h5>
-                                <form action="logic/add-employee.php" method="POST" class="">
-                                    <div class="position-relative form-group">
-                                        <label for="firstNameInput" class="">First name</label>
-                                        <input name="first_name" id="firstNameInput" type="text" class="form-control">
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="lastNameInput" class="">Last name</label>
-                                        <input name="last_name" id="lastNameInput" type="text" class="form-control">
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="emailInput" class="">Email</label>
-                                        <input name="email" id="emailInput" placeholder="user@example.com" type="email"
-                                            class="form-control">
-                                        <small class="form-text text-muted">TODO : Must not be a registered business
-                                            owner's e-mail.</small>
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="phoneInput" class="">Phone number</label>
-                                        <input name="phone" id="phoneInput" type="text" class="form-control">
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="companyChoice" class="">Company</label>
-                                        <select name="company" id="companyChoice" class="form-control">
-                                        <?php
-                                            $companyOptionTemplate = '<option value="{clu_company_id}"{selected_option}>{clu_company_name}</option>';
-                                            $userCompanies = $currentUser->getCompanies();
-                                            $companyOptionPlaceholders = array(
-                                                "id" => "{clu_company_id}",
-                                                "name" => "{clu_company_name}",
-                                                "selected" => "{selected_option}"
-                                            );
-                                            
-                                            foreach ($userCompanies as $company) {
-                                                $selected = "";
-                                                if (isset($_GET['id']) && $_GET['id'] == $company->get('id')) {
-                                                    $selected = "selected";
-                                                }
-                                                $companyInfo = array(
-                                                    "id" => $company->get('id'),
-                                                    "name" => $company->get('name'),
-                                                    "selected" => $selected
-                                                );
+                                <form action="logic/add-employee.php" method="POST" class="needs-validation">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="position-relative form-group">
+                                                <label for="firstNameInput" class="">First name</label>
+                                                <input name="first_name" id="firstNameInput" type="text" class="form-control" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid first name.
+                                                </div>  
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label for="lastNameInput" class="">Last name</label>
+                                                <input name="last_name" id="lastNameInput" type="text" class="form-control" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid last name.
+                                                </div>  
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label for="emailInput" class="">Email</label>
+                                                <input name="email" id="emailInput" placeholder="user@example.com" type="email"
+                                                    class="form-control" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid email.
+                                                </div>  
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label for="genderInput" class="">Gender</label>
+                                                <div>
+                                                    <div class="custom-radio custom-control custom-control-inline">
+                                                        <input type="radio" name="gender" value="male" id="genderMale" class="custom-control-input">
+                                                        <label class="custom-control-label" for="genderMale">Male</label>
+                                                    </div>
 
-                                                $companyOption = fillTemplateWithData($companyOptionTemplate, $companyOptionPlaceholders, $companyInfo);                                                
-                                                echo $companyOption;
-                                            }
-                                        ?>
-                                        </select>
-                                    </div>
+                                                    <div class="custom-radio custom-control custom-control-inline">
+                                                        <input type="radio" name="gender" value="female" id="genderFemale" class="custom-control-input">
+                                                        <label class="custom-control-label" for="genderFemale">Female</label>
+                                                    </div>
+                                                </div>
+                                            </div> 
 
-                                    <div class="position-relative form-group">
-                                        <label for="positionChoice" class="">Position</label>
-                                        <!-- <input name="position" id="position" placeholder="" type="text"
-                                            class="form-control"> -->
-                                        <select name="position" id="positionChoice" class="form-control">
-                                            <option value="null" selected>-- Not selected --</option>
-                                        <?php
-                                            $positionOptionPlaceholder = "<option value={position_id}>{position_name}</option>";
-                                            // $companyPositions = $db->getPositionsForCompany($company->get('id'));
-                                            $positions = $db->getAllPositions();
-                                            
-                                            foreach ($positions as $position) {
-                                                if ($position['id'] == 1) continue;
+                                            <div class="position-relative form-group">
+                                                <label for="phoneInput" class="">Phone number</label>
+                                                <input name="phone" id="phoneInput" type="text" class="form-control">
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="position-relative form-group">
+                                                <label for="companyChoice" class="">Company</label>
+                                                <select name="company" id="companyChoice" class="form-control" required>
+                                                <?php
+                                                    $companyOptionTemplate = '<option value="{clu_company_id}"{selected_option}>{clu_company_name}</option>';
+                                                    $userCompanies = $currentUser->getCompanies();
+                                                    $companyOptionPlaceholders = array(
+                                                        "id" => "{clu_company_id}",
+                                                        "name" => "{clu_company_name}",
+                                                        "selected" => "{selected_option}"
+                                                    );
+                                                    
+                                                    foreach ($userCompanies as $company) {
+                                                        $selected = "";
+                                                        if (isset($_GET['id']) && $_GET['id'] == $company->get('id')) {
+                                                            $selected = "selected";
+                                                        }
+                                                        $companyInfo = array(
+                                                            "id" => $company->get('id'),
+                                                            "name" => $company->get('name'),
+                                                            "selected" => $selected
+                                                        );
 
-                                                $positionOption = $positionOptionPlaceholder;
-                                                $positionOption = str_replace("{position_id}", $position['id'], $positionOption);
-                                                $positionOption = str_replace("{position_name}", $position['name'], $positionOption);
-                                                echo $positionOption;
-                                            }
-                                        ?>
-                                        </select>
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="workHoursInput" class="">Work Hours per Day</label>
-                                        <input name="work_hours_per_day" id="workHoursInput" type="number" min="1"
-                                            max="13" class="form-control">
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="availableDaysOffInput" class="">Available Days off</label>
-                                        <input name="available_days_off" id="availableDaysOffInput" type="number"
-                                            min="0" max="28" class="form-control">
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="messageToEmployee" class="">Message to employee (optional)</label>
-                                        <textarea name="text" id="messageToEmployee" class="form-control"></textarea>
-                                    </div>
-                                    <!-- <div class="position-relative form-group">
-                                                        <label for="exampleFile" class="">File</label>
-                                                        <input name="file" id="exampleFile" type="file" class="form-control-file">
-                                                    </div> -->
+                                                        $companyOption = fillTemplateWithData($companyOptionTemplate, $companyOptionPlaceholders, $companyInfo);                                                
+                                                        echo $companyOption;
+                                                    }
+                                                ?>
+                                                </select>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid company.
+                                                </div> 
+                                            </div>
+
+                                            <div class="position-relative form-group">
+                                                <label for="positionChoice" class="">Position</label>
+                                                <!-- <input name="position" id="position" placeholder="" type="text"
+                                                    class="form-control"> -->
+                                                <select name="position" id="positionChoice" class="form-control" required>
+                                                    <option value="null">-- Not selected --</option>
+                                                <?php
+                                                    $positionOptionPlaceholder = "<option value={position_id}>{position_name}</option>";
+                                                    // $companyPositions = $db->getPositionsForCompany($company->get('id'));
+                                                    $positions = $db->listAll("position_types");
+                                                    
+                                                    foreach ($positions as $position) {
+                                                        if ($position['id'] == 1) continue;
+
+                                                        $positionOption = $positionOptionPlaceholder;
+                                                        $positionOption = str_replace("{position_id}", $position['id'], $positionOption);
+                                                        $positionOption = str_replace("{position_name}", $position['name'], $positionOption);
+                                                        echo $positionOption;
+                                                    }
+                                                ?>
+                                                </select>
+                                                 <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid position.
+                                                </div> 
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label for="workHoursInput" class="">Work Hours per Day</label>
+                                                <input name="work_hours_per_day" id="workHoursInput" type="number" min="1"
+                                                    max="13" class="form-control" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please provide valid work hours.
+                                                </div> 
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label for="availableDaysOffInput" class="">Available Days off</label>
+                                                <input name="available_days_off" id="availableDaysOffInput" type="number"
+                                                    min="0" max="28" class="form-control" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid amount of days off.
+                                                </div> 
+                                            </div>
+                                            <div class="position-relative form-group">
+                                                <label for="messageToEmployee" class="">Message to employee (optional)</label>
+                                                <textarea name="text" id="messageToEmployee" class="form-control"></textarea>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2"></div>
+
+                                    </div>  
                                     <button class="mt-1 btn btn-primary">Submit</button>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Sizing</h5>
-                                <form class=""><input placeholder="lg" type="text"
-                                        class="mb-2 form-control-lg form-control"><input placeholder="default"
-                                        type="text" class="mb-2 form-control"><input placeholder="sm" type="text"
-                                        class="mb-2 form-control-sm form-control">
-                                    <div class="divider"></div>
-                                    <select class="mb-2 form-control-lg form-control">
-                                        <option>Large Select</option>
-                                    </select><select class="mb-2 form-control">
-                                        <option>Default Select</option>
-                                    </select><select class="form-control-sm form-control">
-                                        <option>Small Select</option>
-                                    </select>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Checkboxes &amp; Radios</h5>
-                                <form class="">
-                                    <fieldset class="position-relative form-group">
-                                        <div class="position-relative form-check"><label class="form-check-label"><input
-                                                    name="radio1" type="radio" class="form-check-input"> Option one is
-                                                this and that—be sure to include why it's great</label>
-                                        </div>
-                                        <div class="position-relative form-check"><label class="form-check-label"><input
-                                                    name="radio1" type="radio" class="form-check-input"> Option two can
-                                                be something else and selecting it will deselect option
-                                                one</label></div>
-                                        <div class="position-relative form-check disabled"><label
-                                                class="form-check-label"><input name="radio1" disabled="" type="radio"
-                                                    class="form-check-input"> Option three is disabled</label></div>
-                                    </fieldset>
-                                    <div class="position-relative form-check"><label class="form-check-label"><input
-                                                type="checkbox" class="form-check-input"> Check me out</label></div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane tabs-animation fade" id="tab-content-1" role="tabpanel">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Input Groups</h5>
-                                <div>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">@</span></div>
-                                        <input placeholder="username" type="text" class="form-control">
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text"><input
-                                                    aria-label="Checkbox for following text input" type="checkbox"
-                                                    class=""></span></div>
-                                        <input placeholder="Check it out" type="text" class="form-control">
-                                    </div>
-                                    <br>
-                                    <div class="input-group"><input placeholder="username" type="text"
-                                            class="form-control">
-                                        <div class="input-group-append"><span
-                                                class="input-group-text">@example.com</span></div>
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">$</span><span
-                                                class="input-group-text">$</span></div>
-                                        <input placeholder="Dolla dolla billz yo!" type="text" class="form-control">
-                                        <div class="input-group-append"><span class="input-group-text">$</span><span
-                                                class="input-group-text">$</span></div>
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                        <input placeholder="Amount" step="1" type="number" class="form-control">
-                                        <div class="input-group-append"><span class="input-group-text">.00</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Input Group Button Dropdown</h5>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button type="button" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false" class="dropdown-toggle btn btn-secondary">Button
-                                            Dropdown</button>
-                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-                                            <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                            <button type="button" disabled="" tabindex="-1"
-                                                class="disabled dropdown-item">Action</button>
-                                            <button type="button" tabindex="0" class="dropdown-item">Another
-                                                Action</button>
-                                            <div tabindex="-1" class="dropdown-divider"></div>
-                                            <button type="button" tabindex="0" class="dropdown-item">Another
-                                                Action</button>
-                                        </div>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Input Group Button Shorthand</h5>
-                                <div>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-secondary">To the Left!</button>
-                                        </div>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <br>
-                                    <div class="input-group"><input type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-secondary">To the Right!</button>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-danger">To the Left!</button>
-                                        </div>
-                                        <input placeholder="and..." type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-success">To the Right!</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Input Group Sizing</h5>
-                                <div>
-                                    <div class="input-group input-group-lg">
-                                        <div class="input-group-prepend"><span class="input-group-text">@lg</span></div>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">@normal</span>
-                                        </div>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <br>
-                                    <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend"><span class="input-group-text">@sm</span></div>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Input Group Addon</h5>
-                                <div>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">To the
-                                                Left!</span></div>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <br>
-                                    <div class="input-group"><input type="text" class="form-control">
-                                        <div class="input-group-append"><span class="input-group-text">To the
-                                                Right!</span></div>
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">To the
-                                                Left!</span></div>
-                                        <input placeholder="and..." type="text" class="form-control">
-                                        <div class="input-group-append"><span class="input-group-text">To the
-                                                Right!</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="main-card mb-3 card">
-                            <div class="card-body">
-                                <h5 class="card-title">Input Group Button</h5>
-                                <div>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-secondary">I'm a button</button>
-                                        </div>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <br>
-                                    <div class="input-group"><input type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <button type="button" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false" class="dropdown-toggle btn btn-secondary">Button
-                                                Dropdown</button>
-                                            <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-                                                <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                                <button type="button" disabled="" tabindex="-1"
-                                                    class="disabled dropdown-item">Action</button>
-                                                <button type="button" tabindex="0" class="dropdown-item">Another
-                                                    Action</button>
-                                                <div tabindex="-1" class="dropdown-divider"></div>
-                                                <button type="button" tabindex="0" class="dropdown-item">Another
-                                                    Action</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-outline-secondary">Split Button</button>
-                                            <button type="button" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false"
-                                                class="dropdown-toggle dropdown-toggle-split btn btn-outline-secondary"><span
-                                                    class="sr-only">Toggle Dropdown</span></button>
-                                            <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
-                                                <h6 tabindex="-1" class="dropdown-header">Header</h6>
-                                                <button type="button" disabled="" tabindex="-1"
-                                                    class="disabled dropdown-item">Action</button>
-                                                <button type="button" tabindex="0" class="dropdown-item">Another
-                                                    Action</button>
-                                                <div tabindex="-1" class="dropdown-divider"></div>
-                                                <button type="button" tabindex="0" class="dropdown-item">Another
-                                                    Action</button>
-                                            </div>
-                                        </div>
-                                        <input placeholder="and..." type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-secondary">I'm a button</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane tabs-animation fade" id="tab-content-2" role="tabpanel">
-                <form class="">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="main-card mb-3 card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Checkboxes</h5>
-                                    <div class="position-relative form-group">
-                                        <div>
-                                            <div class="custom-checkbox custom-control"><input type="checkbox"
-                                                    id="exampleCustomCheckbox" class="custom-control-input"><label
-                                                    class="custom-control-label" for="exampleCustomCheckbox">Check this
-                                                    custom checkbox</label></div>
-                                            <div class="custom-checkbox custom-control"><input type="checkbox"
-                                                    id="exampleCustomCheckbox2" class="custom-control-input"><label
-                                                    class="custom-control-label" for="exampleCustomCheckbox2">Or this
-                                                    one</label></div>
-                                            <div class="custom-checkbox custom-control"><input type="checkbox"
-                                                    id="exampleCustomCheckbox3" disabled=""
-                                                    class="custom-control-input"><label class="custom-control-label"
-                                                    for="exampleCustomCheckbox3">But
-                                                    not this disabled one</label></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="main-card mb-3 card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Inline</h5>
-                                    <div class="position-relative form-group">
-                                        <div>
-                                            <div class="custom-checkbox custom-control custom-control-inline"><input
-                                                    type="checkbox" id="exampleCustomInline"
-                                                    class="custom-control-input"><label class="custom-control-label"
-                                                    for="exampleCustomInline">An inline custom
-                                                    input</label></div>
-                                            <div class="custom-checkbox custom-control custom-control-inline"><input
-                                                    type="checkbox" id="exampleCustomInline2"
-                                                    class="custom-control-input"><label class="custom-control-label"
-                                                    for="exampleCustomInline2">and another one</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="main-card mb-3 card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Radios</h5>
-                                    <div class="position-relative form-group">
-                                        <div>
-                                            <div class="custom-radio custom-control"><input type="radio"
-                                                    id="exampleCustomRadio" name="customRadio"
-                                                    class="custom-control-input"><label class="custom-control-label"
-                                                    for="exampleCustomRadio">Select
-                                                    this custom radio</label></div>
-                                            <div class="custom-radio custom-control"><input type="radio"
-                                                    id="exampleCustomRadio2" name="customRadio"
-                                                    class="custom-control-input"><label class="custom-control-label"
-                                                    for="exampleCustomRadio2">Or
-                                                    this one</label></div>
-                                            <div class="custom-radio custom-control"><input type="radio"
-                                                    id="exampleCustomRadio3" disabled=""
-                                                    class="custom-control-input"><label class="custom-control-label"
-                                                    for="exampleCustomRadio3">But not this
-                                                    disabled one</label></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="main-card mb-3 card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Form Select</h5>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group"><label for="exampleCustomSelect"
-                                                    class="">Custom Select</label><select type="select"
-                                                    id="exampleCustomSelect" name="customSelect" class="custom-select">
-                                                    <option value="">Select</option>
-                                                    <option>Value 1</option>
-                                                    <option>Value 2</option>
-                                                    <option>Value 3</option>
-                                                    <option>Value 4</option>
-                                                    <option>Value 5</option>
-                                                </select></div>
-                                            <div class="position-relative form-group"><label
-                                                    for="exampleCustomMutlipleSelect" class="">Custom Multiple
-                                                    Select</label><select multiple="" type="select"
-                                                    id="exampleCustomMutlipleSelect" name="customSelect"
-                                                    class="custom-select">
-                                                    <option value="">Select</option>
-                                                    <option>Value 1</option>
-                                                    <option>Value 2</option>
-                                                    <option>Value 3</option>
-                                                    <option>Value 4</option>
-                                                    <option>Value 5</option>
-                                                </select></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group"><label
-                                                    for="exampleCustomSelectDisabled" class="">Custom Select
-                                                    Disabled</label><select type="select"
-                                                    id="exampleCustomSelectDisabled" name="customSelect" disabled=""
-                                                    class="custom-select">
-                                                    <option value="">Select</option>
-                                                    <option>Value 1</option>
-                                                    <option>Value 2</option>
-                                                    <option>Value 3</option>
-                                                    <option>Value 4</option>
-                                                    <option>Value 5</option>
-                                                </select></div>
-                                            <div class="position-relative form-group"><label
-                                                    for="exampleCustomMutlipleSelectDisabled" class="">Custom Multiple
-                                                    Select Disabled</label><select multiple="" type="select"
-                                                    id="exampleCustomMutlipleSelectDisabled" name="customSelect"
-                                                    disabled="" class="custom-select">
-                                                    <option value="">Select</option>
-                                                    <option>Value 1</option>
-                                                    <option>Value 2</option>
-                                                    <option>Value 3</option>
-                                                    <option>Value 4</option>
-                                                    <option>Value 5</option>
-                                                </select></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <script type="text/javascript">
+        
+                    // Example starter JavaScript for disabling form submissions if there are invalid fields
+                    (function() {
+                        'use strict';
+                        window.addEventListener('load', function() {
+                            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                            var forms = document.getElementsByClassName('needs-validation');
+                            // Loop over them and prevent submission
+                            var validation = Array.prototype.filter.call(forms, function(form) {
+                                form.addEventListener('submit', function(event) {
+                                    if (form.checkValidity() === false) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    }
+                                    form.classList.add('was-validated');
+                                }, false);
+                            });
+                        }, false);
+                    })();
+                                
+                    </script>
                 </form>
             </div>
         </div>
-    </div>
+    </div>  
     <?php 
 echo Template::footer($templateDir);

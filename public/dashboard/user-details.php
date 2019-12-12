@@ -8,10 +8,17 @@ use Util\Template;
 $pageName = "Dashboard | User details";
 $templateDir = "public/dashboard"; 
 
-$userId = isset($_GET['id']) ? $_GET['id'] : $currentUser->get('id');
-if (!$currentUser->isInCompany($userId)) {
-    returnToPage("user-details.php");
+// $userId = isset($_GET['id']) ? $_GET['id'] : $currentUser->get('id');
+
+if (isset($_GET['id'])) {
+    $userId = $_GET['id'];
+    if (!$currentUser->isInCompany($userId)) {
+        returnToPage("user-details.php");
+    }
+} else {
+    $userId = $currentUser->get('id');
 }
+
 init_dashboard($currentUser, Template::header($pageName, $templateDir));
 
 $user = new User($userId);
@@ -82,9 +89,9 @@ $icon = $user->get('id') == $currentUser->get('id') ? "user" : "id"
                                             if ($user->get('user_type_id') == 1) {
                                                 echo "Company Owner";
                                             } else {
-                                                // show($user->getEmployeeData());
-                                                $position = $db->getType("position", $user->getEmployeeData()->get('position_id'));
-                                                $company = new Company($user->getEmployeeData()->get('company_id'));
+                                                $employeeData = $user->getEmployeeData();
+                                                $position = $db->getType("position", $employeeData->get('position_id'));
+                                                $company = new Company($employeeData->get('company_id'));
                                                 echo $position . " at " . $company->get('name');
                                             }
                                         ?>

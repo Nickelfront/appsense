@@ -23,7 +23,7 @@ $company = new Company($_GET['id']);
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="pe-7s-user icon-gradient bg-sunny-morning"></i>
+                        <i class="pe-7s-global icon-gradient bg-sunny-morning"></i>
                     </div>
                     <div>Company details
                         <div class="page-title-subheading">View your details available to everyone who can see your
@@ -73,11 +73,8 @@ $company = new Company($_GET['id']);
                                         </div>
                                         <div class="widget-content-left flex2">
                                             <div class="widget-content-left flex2">
-                                                <p>Some quick example text to build on the card title and make up the
-                                                    bulk of the card's content.</p>
+                                                <p>Total workers: <?php echo count($company->getAllEmployees()); ?></p>
 
-                                                <!-- <a href="javascript:void(0);" class="card-link">Card Link</a>
-                                                <a href="javascript:void(0);" class="card-link">Another Link</a> -->
                                             </div>
                                         </div>
                                     </div>

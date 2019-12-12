@@ -14,5 +14,9 @@ foreach ($newValues as $key => $value) {
         $currentUser->updateField("updated_at", $now);
     }
 }
+$page = '../edit-profile.php';
+if($result) {
+	$page .= "?updatedDetails=$result";
+}
 
-returnToPage("../edit-profile.php?updatedDetails=$result");
+returnToPage($page);

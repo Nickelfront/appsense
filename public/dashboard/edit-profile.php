@@ -32,11 +32,12 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                 <div class="main-card mb-3 card">
                     <div class="card-body">
                         <h5 class="card-title">Your profile</h5>
+                        <!-- <div class="alert alert-danger fade show" role="alert">This is a danger alert — check it out!</div> -->
                         <div class="widget-content p-0">
                             <div class="widget-content-wrapper">
                                 <div class="widget-content-left mr-3">
                                     <div class="widget-content-left">
-                                        <img width="100" class="rounded-circle" src="<?php echo $currentUser->get('avatar') ?>"
+                                        <img width="100" class="rounded-circle" src="<?php echo $currentUser->get('avatar') ? $currentUser->get('avatar') : 'https://eu.ui-avatars.com/api/?name=' . $currentUser->get('first_name') . "+" . $currentUser->get('last_name'); ?>"
                                             alt="">
                                     </div>
                                 </div>
@@ -66,6 +67,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                 </div>
                             </div>
                         </div>
+
                         <div class="divider"></div>
 
                         <div class="card-body">
@@ -100,19 +102,46 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     </div>
                                 </form>
                                 <div class="divider"></div>
-                                <form action="./logic/change-pass.php" method="POST">
+                                <form action="./logic/change-pass.php" id="passwordChange" class="needs-validation" method="POST">
                                     <h5 class="card-title">Change your password</h5>
+                                    <?php
+                                        if (isset($_GET['changedPassword'])) {
+                                            if($_GET['changedPassword'] == 'fail') {
+                                                if ($_GET['reason'] == 'wrongPass') $reason = "Incorrect current password.";
+                                                if ($_GET['reason'] == 'shortPass') $reason = "The new password must be at least 6 characters long.";
+                                                echo '<div class="alert alert-danger fade show" role="alert">' . $reason . '</div>';
+                                            } else {
+                                                echo '<div class="alert alert-success fade show" role="alert">Successfuly changed password.</div>';
+                                            }
+                                        }
+                                    ?>
                                     <div class="position-relative row form-group">
                                         <label for="currentPassword" class="col-sm-2 col-form-label">Old password</label>
-                                        <div class="col-sm-10"><input name="currentPassword" id="currentPassword" type="password" class="form-control"></div>
+                                        <div class="col-sm-10">
+                                            <input name="currentPassword" id="currentPassword" type="password" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                You need to type in your current password before changing it.
+                                            </div>  
+                                        </div>
                                     </div>
                                     <div class="position-relative row form-group">
                                         <label for="newPassword" class="col-sm-2 col-form-label">New password</label>
-                                        <div class="col-sm-10"><input name="newPassword" id="newPassword" type="password" class="form-control"></div>
+                                        <div class="col-sm-10">
+                                            <input name="newPassword" id="newPassword" type="password" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                New password must not be empty.
+                                            </div>  
+                                        </div>
+
                                     </div>
                                     <div class="position-relative row form-group">
                                         <label for="confirmedNewPassword" class="col-sm-2 col-form-label">Confirm new password</label>
-                                        <div class="col-sm-10"><input name="confirmedNewPassword" id="confirmedNewPassword" type="password" class="form-control"></div>
+                                        <div class="col-sm-10">
+                                            <input name="confirmedNewPassword" id="confirmedNewPassword" type="password" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please confirm your new password.
+                                            </div>  
+                                        </div>
                                     </div>
                                    
                                     <div class="position-relative row form-check">

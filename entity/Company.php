@@ -10,6 +10,10 @@ class Company extends Entity {
         // $this->data = $this->db->getCompanyData($companyId);
     }
 
+    public function getOwner() {
+        return new User($this->get('owner_id'));
+    }
+
     public function getBusinessType() {
         return $this->db->getType("business", $this->get('business_type_id'));
     }

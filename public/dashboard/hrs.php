@@ -61,9 +61,9 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                         </div>
                     </li>';
 
-                    $addNewHRHTML = '<div class="d-block text-center card-footer">
-                        <button class="btn-wide btn btn-primary" onclick="window.open(`assign-hr.php`, `_self`);">Assign new HR</button>
-                    </div>';
+                    // $addNewHRHTML = '<div class="d-block text-center card-footer">
+                    //     <button class="btn-wide btn btn-primary" onclick="window.open(`assign-hr.php`, `_self`);">Assign new HR</button>
+                    // </div>';
                     $companies = $currentUser->getCompanies();
                     $companyPlaceholders = array(
                         "id" => "{company_id}",
@@ -80,8 +80,10 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                    
                     foreach($companies as $company) {
                         $hrsList = $company->getHumanResourcesEmployees();
-                        
                         $hrsData = "";
+                        if (empty($hrsList)) {
+                            $hrsData = "<p class='text-center'><i>Currently you have no HRs for this company.</i></p>";
+                        }
                         foreach($hrsList as $hr) {
                             $hrUserId = $hr->get('user_id');
                             $hrUserData = new User($hrUserId);
@@ -102,7 +104,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                             );
                             $hrsData .= fillTemplateWithData($hrPlaceholder, $hrPlaceholders, $hrData);
                         }
-                        $hrsData .= $addNewHRHTML;
+                        // $hrsData .= $addNewHRHTML;
                         $companyData = array(
                             "id" => $company->get('id'),
                             "name" => $company->get('name'),

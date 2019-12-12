@@ -7,8 +7,14 @@ $currentPass = $_POST['currentPassword'];
 $result = "fail";
 if (password_verify($currentPass, $currentUser->get('password'))) {
     $newPass = $_POST['newPassword'];
-    $currentUser->updateField("password", password_hash($newPass, PASSWORD_BCRYPT));
-    $result = "success";
+    if (strlen($newPass) < 6) {
+    	$result .= "&reason=shortPass";
+    } else {
+	    $currentUser->updateField("password", password_hash($newPass, PASSWORD_BCRYPT));
+	    $result = "success";
+    }
+} else {
+	$result .= "&reason=wrongPass";
 }
 
-returnToPage("../edit-profile.php?changedPassword=$result");
+returnToPage("../edit-profile.php?changedPassword=$result#passwordChange");

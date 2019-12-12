@@ -1,4 +1,4 @@
-<?php
+<?phpCreated
 include_once "../../../app/bootstrap.php";
 
 use entity\Employee;
@@ -10,12 +10,18 @@ $redirect = "../add-employee.php?employeeAdded=";
 foreach($_POST as $key => $value) {
     if ($key != "text") {
         if (!$value) {
-            $_GET['employeeAdded'] = "fail";
-            returnToPage($redirect . $_GET['employeeAdded']);
+            returnToPage($redirect . 'fail' . '&reason=empty');
             return;
         } 
     }
 } 
+
+if (User::getUserByEmail($_POST['email'])) {
+    // show(User::getUserByEmail($_POST['email']));
+    returnToPage($redirect . 'fail' . '&reason=existing');
+    die();
+}
+
 $position = new Position($_POST['position']);
 $isHR = strpos($position->get('name'), "HR ") != -1;
 
@@ -49,16 +55,5 @@ $employeeData = array(
 // show ($employeeData);
 Employee::insertInDB($employeeData, $db);
 
-$_GET['employeeAdded'] = "success";
+returnToPage($redirect . 'success');
 
-returnToPage($redirect . $_GET['employeeAdded']);
-
-function generateRandomString($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    return $randomString;
-}
