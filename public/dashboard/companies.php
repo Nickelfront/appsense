@@ -97,8 +97,15 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     $companyDetailsHTML = str_replace($companyIdPlaceHolder, $company->get('id'), $companyDetailsHTML);
                                     $companyDetailsHTML = str_replace($companyNamePlaceHolder, $company->get('name'), $companyDetailsHTML);
                                 
+                                    $topHR = null;
+                                    try {
+                                        $topHR = $company->getFirstHR()->getUserData(); 
+                                    } catch(Error $e) {
+                                    }
+                                    if ($topHR != null) $topHRname = $topHR->get('first_name') . " " . $topHR->get('last_name');
+
                                     $logo = $company->get('logo') ? $company->get('logo') : "https://i-love-png.com/images/not-available_7305.png";
-                                    $hrResults = $company->get('human_resources') ? $company->get('human_resources') : "<i>Not set</i>";
+                                    $hrResults = $topHR ? $topHRname : "<i>Not set</i>";
                                     $activityColor = $company->get('status') == "active" ? "success" : "danger";
 
                                     $companyDetailsHTML = str_replace($companyLogoPlaceHolder, $logo, $companyDetailsHTML);

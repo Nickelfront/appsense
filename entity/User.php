@@ -19,8 +19,10 @@ class User extends Entity {
     public function getCompanies() {
         $companies = null;
         if ($this->get('user_type_id') == 1) {
+            $query = "SELECT id FROM companies WHERE owner_id = " . $this->get('id');
+            $results = $this->db->searchInDB($query);
+            
             $companies = array();
-            $results = $this->db->getUserCompanies($this->get('id'));
             foreach($results as $result) {
                 $companies[] = new Company($result['id']);
             }
@@ -28,7 +30,9 @@ class User extends Entity {
     }
 
     public function getEmployeeData() {
-        return new Employee($this->db->getEmployeeByUserId($this->get('id')));
+        $query = "SELECT id FROM employees WHERE user_id = " . $this->get('id');
+        $employeeId = $this->db->searchInDB($query);
+        return new Employee($employeeId);
     }
 
     public static function getUserByEmail($userEmail) {

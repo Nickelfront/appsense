@@ -14,7 +14,7 @@ class Employee extends Entity {
     }
 
     public function getUserData() { 
-        $user = new User($this->db->getUserByEmployeeId($this->get('id')));
+        $user = new User($this->get('user_id'));
         return $user;
     }
 

@@ -26,9 +26,9 @@ class DB {
         return $this->searchInDB("SELECT * FROM $tableName");
     }
 
-    public function getAllPositions() {
-        return $this->searchInDB("SELECT * FROM position_types");
-    }
+    // public function getAllPositions() {
+    //     return $this->searchInDB("SELECT * FROM position_types");
+    // }
 
     /* CREATE OPERATIONS */
 
@@ -70,11 +70,12 @@ class DB {
         $result = $this->getFirstResult($query);
         return $result['id'];
     }
-    public function getUserField($userId, $requiredField)
-    {
-        $userData = $this->getUserData($userId);
-        return $this->getField($userData, $requiredField);
-    }
+ 
+    // public function getUserField($userId, $requiredField)
+    // {
+    //     $userData = $this->getUserData($userId);
+    //     return $this->getField($userData, $requiredField);
+    // }
 
     public function getUserData($userId) {
         $userData = $this->searchInDB("SELECT * FROM users WHERE id = $userId")[0];
@@ -85,52 +86,52 @@ class DB {
      * @param mixed $userId the ID of the user whose companies we want to see
      * @return array array of all the Companies
      */
-    public function getUserCompanies($userId) {
-        $query = "SELECT id FROM companies WHERE owner_id = $userId";
-        $results = $this->searchInDB($query);
-        return $results;
-    }
+    // public function getUserCompanies($userId) {
+    //     $query = "SELECT id FROM companies WHERE owner_id = $userId";
+    //     $results = $this->searchInDB($query);
+    //     return $results;
+    // }
   
-    public function getEmployeeByUserId($userId) {
-        $employeeId = $this->searchInDB("SELECT id FROM employees WHERE user_id = $userId")[0]['id'];
-        return $employeeId;
-    }
+    // public function getEmployeeByUserId($userId) {
+    //     $employeeId = $this->searchInDB("SELECT id FROM employees WHERE user_id = $userId")[0]['id'];
+    //     return $employeeId;
+    // }
 
-    public function getUserByEmployeeId($employeeId) {
-        $employee = $this->getEmployee($employeeId);
-        $userId = $this->searchInDB("SELECT id FROM users WHERE id = " . $employee['user_id'])[0]['id'];
-        return $userId;
-    }
+    // public function getUserByEmployeeId($employeeId) {
+    //     $employee = $this->getEmployee($employeeId);
+    //     $userId = $this->searchInDB("SELECT id FROM users WHERE id = " . $employee['user_id'])[0]['id'];
+    //     return $userId;
+    // }
 
-    public function getEmployee($employeeId) {
-        return $this->searchInDB("SELECT * FROM employees WHERE id = $employeeId")[0];
-    }
+    // public function getEmployee($employeeId) {
+    //     return $this->searchInDB("SELECT * FROM employees WHERE id = $employeeId")[0];
+    // }
     
-    public function getCompany($companyId) {
-        $companyResult = $this->searchInDB("SELECT * FROM companies WHERE id = $companyId")[0];
-        if ($companyResult) {
-            return $companyResult;
-        } return false;
-    }
+    // public function getCompany($companyId) {
+    //     $companyResult = $this->searchInDB("SELECT * FROM companies WHERE id = $companyId")[0];
+    //     if ($companyResult) {
+    //         return $companyResult;
+    //     } return false;
+    // }
 
-    public function getCompanyData($companyId) {
-        $companyData = $this->searchInDB("SELECT * FROM companies WHERE id = $companyId")[0];
-        return $companyData;
-    }
+    // public function getCompanyData($companyId) {
+    //     $companyData = $this->searchInDB("SELECT * FROM companies WHERE id = $companyId")[0];
+    //     return $companyData;
+    // }
 
-    public function getApprovedAbsences($companyId) {
-        $query = "SELECT * FROM absence_requests WHERE status = 'Approved' AND employee_id = ";
-        $approvedAbsences = array();
-        $employees = $this->listAllEmployees($companyId);
+    // public function getApprovedAbsences($companyId) {
+    //     $query = "SELECT * FROM absence_requests WHERE status = 'Approved' AND employee_id = ";
+    //     $approvedAbsences = array();
+    //     $employees = $this->listAllEmployees($companyId);
         
-        foreach ($employees as $employee) {
-            $employeeAbsences = $this->searchInDB($query . $employee['id']); // array of all absences for this employee
-            if ($employeeAbsences) {
-                $approvedAbsences[] = $employeeAbsences; 
-            }
-        }
-        return $approvedAbsences; 
-    }
+    //     foreach ($employees as $employee) {
+    //         $employeeAbsences = $this->searchInDB($query . $employee['id']); // array of all absences for this employee
+    //         if ($employeeAbsences) {
+    //             $approvedAbsences[] = $employeeAbsences; 
+    //         }
+    //     }
+    //     return $approvedAbsences; 
+    // }
 
     public function getNewAbsenceRequests($userId) {
         $result = $this->searchInDB("SELECT COUNT FROM absence_requests_notifications WHERE for_user_id = $userId")[0];
@@ -143,21 +144,21 @@ class DB {
      * Lists all HRs working in the HR department of a given company
      *  
      *  */    
-    public function listHRsForCompany($companyId) {
-        $hrResults = array();
-        $query = "SELECT e.id FROM employees e JOIN users u ON e.user_id = u.id WHERE company_id = $companyId AND user_type_id = 2";
-        // show($hrResults);
-        $hrResults = $this->searchInDB($query);      
-        return $hrResults;
-    }
+    // public function listHRsForCompany($companyId) {
+    //     $hrResults = array();
+    //     $query = "SELECT e.id FROM employees e JOIN users u ON e.user_id = u.id WHERE company_id = $companyId AND user_type_id = 2";
+    //     // show($hrResults);
+    //     $hrResults = $this->searchInDB($query);      
+    //     return $hrResults;
+    // }
 
     /**
      * Lists  all employees of a given company
      * @param $companyId : the ID of the company whose employees need to be listed  
      */
-    public function listAllEmployees($companyId) {
-        return $this->searchInDB("SELECT id FROM employees WHERE company_id = $companyId");
-    }
+    // public function listAllEmployees($companyId) {
+    //     return $this->searchInDB("SELECT id FROM employees WHERE company_id = $companyId");
+    // }
 
     /** UPDATE OPERATIONS -TODO */
     public function updateUserField($userId, $field, $newValue) {
@@ -182,7 +183,7 @@ class DB {
 
     public function getType($name, $id) {
         $query = "SELECT name FROM " . $name . "_types WHERE id = " . $id;
-        return $this->searchInDB($query)[0]['name'];
+        return $this->getFirstResult($query)['name'];
     }
 
     /** Get a single value for a given record

@@ -14,9 +14,14 @@ class Company extends Entity {
         return $this->db->getType("business", $this->get('business_type_id'));
     }
 
+    public function getFirstHR() {
+        return $this->getHumanResourcesEmployees() ? $this->getHumanResourcesEmployees()[0] : null;
+    }
+
     public function getHumanResourcesEmployees() {
+        $query = "SELECT e.id FROM employees e JOIN users u ON e.user_id = u.id WHERE company_id = " . $this->get('id') . " AND user_type_id = 2";
         $hrs = array();
-        $results = $this->db->listHRsForCompany($this->get('id'));
+        $results = $this->db->searchInDB($query);;
         foreach($results as $result) {
             $hrs[] = new Employee($result['id']);
         }
@@ -24,7 +29,8 @@ class Company extends Entity {
     }
 
     public function getAllEmployees() {
-        $employeesResults = $this->db->listAllEmployees($this->get('id'));
+        $query = "SELECT id FROM employees WHERE company_id = " . $this->get('id');
+        $employeesResults = $this->db->searchInDB($query);
         $employees = array();
         foreach ($employeesResults as $employee) {
             $employees[] = new Employee($employee['id']);
