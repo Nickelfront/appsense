@@ -11,7 +11,6 @@ $correctPass = verifyUser($db, $userEmail, $_POST['pass']);
 
 if ($correctPass) {
     $loggedInUser = User::getUserByEmail($userEmail);
-    
     if ($loggedInUser->get('user_type_id') > 1) {
         if ($loggedInUser->getEmployeeCompany()->get('status') != 'active') {
             $endpoint = "../login.php?inactive-company";
@@ -20,18 +19,17 @@ if ($correctPass) {
         $existingToken = ($loggedInUser->get('login_token') != null || $loggedInUser->get('login_token') != "");
         if ($existingToken) {
             returnToPage("../login.php?already-logged-in");
-            // die();
-        }
-        
-        $_SESSION['id'] = $loggedInUser->get('id');
-        $token = generateToken();
-        $loggedInUser->updateField("login_token", $token);
-        
-        $_SESSION['login_token'] = $token;
-        
-        $endpoint = "../dashboard/index.php";
-        $_SESSION['loggedIn'] = true;
+            die();
+        }        
     } 
+    $_SESSION['id'] = $loggedInUser->get('id');
+    $token = generateToken();
+    $loggedInUser->updateField("login_token", $token);
+    
+    $_SESSION['login_token'] = $token;
+    
+    $endpoint = "../dashboard/index.php";
+    $_SESSION['loggedIn'] = true;
 } else {
     $endpoint = "../login.php?incorrect";
 }

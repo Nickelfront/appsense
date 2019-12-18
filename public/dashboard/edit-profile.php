@@ -35,13 +35,14 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                         <!-- <div class="alert alert-danger fade show" role="alert">This is a danger alert — check it out!</div> -->
                          <?php 
                             if (isset($_GET['updatedDetails'])) {
-                                if ($_GET['updatedDetails'] == 'success') {
+                                $updatedDetails = $_GET['updatedDetails'];
+                                if ($updatedDetails == 'success') {
                                  echo '<div class="alert alert-success fade show" role="alert">Successfully updated your profile.</div>';
-                                } else {
+                                } else if ($updatedDetails == 'fail') {
                                     echo '<div class="alert alert-danger fade show" role="alert">Could not update your profile due to empty entries.</div>'; 
+                                } else {
+                                    echo '<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>There was no data to be updated.</div>';
                                 }
-                            } else {
-                                echo '<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>There was no data to be updated.</div>';
                             }
                         ?>
                         <div class="widget-content p-0">
@@ -52,6 +53,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                             alt="">
                                             
                                         <div class="row">
+                                        
                                             <form action="logic/upload-pic.php" method="POST" enctype="multipart/form-data">
                                                 <div class="mt-2 btn-group">
                                                     <button class="btn btn-dark">Change</button>
@@ -61,11 +63,13 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(52px, 33px, 0px);">
                                                         <button type="button" tabindex="0" class="dropdown-item"id="updatePic" onclick="$('#picInput').click();">Update picture</button>
                                                         <div tabindex="-1" class="dropdown-divider"></div>
-                                                        <button type="button" tabindex="0" class="dropdown-item" id="removePic">Remove current picture</button>
+                                                        <button onclick="location.href='logic/remove-pic.php?user'" type="button" tabindex="0" class="dropdown-item" >Remove current picture</button>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" name="upload-type" value="user">
                                                 <input style="height:0px;display:none;overflow:hidden" type="file" id="picInput" name="user-avatar" accept="image/*"/>
-                                                <button class="mt-2 mr-2 btn btn-info" id="update-pic">Update</button>
+                                                <br>
+                                                <button class="mt-2 btn btn-info" id="update-pic">Update</button>
                                             </form>
                                         </div>
                                     </div>

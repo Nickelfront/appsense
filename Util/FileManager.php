@@ -8,13 +8,16 @@ class FileManager {
     // upload file to path
     public static function upload($file, $customFileName = null, $uploadDir = null) {
         $fileName = $customFileName ? $customFileName : "";
-        if ($uploadDir) {
-            $uploadDir = getBaseDir() . $uploadDir;
-        }
+        // if ($uploadDir) {
+            // $uploadDir = getBaseDir() . $uploadDir;
+            // show($uploadDir);
+        // }
         if ($file['error'] == 0) {
             if ($uploadDir) {
                 // store in custom destination, under custom (or the same) name.
-                return move_uploaded_file($file["tmp_name"], $uploadDir . DIRECTORY_SEPARATOR . $fileName);
+                if (move_uploaded_file($file["tmp_name"], getBaseDir() . $uploadDir . DIRECTORY_SEPARATOR . $fileName)) {
+                    return $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+                } 
             }
         } 
         return false;
@@ -26,5 +29,12 @@ class FileManager {
     }
 
     // resize file if needed
+    public static function resize($file) {
+        //TODO
+    }
+
+    public static function deleteFromFS($file) {
+
+    }
 
 }

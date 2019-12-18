@@ -248,7 +248,6 @@ class DB {
      */
     public function update($table, $field, $newValue, $uniqueField, $uniqueValue) {
         $query = "UPDATE $table SET $field = '$newValue' WHERE $uniqueField = '$uniqueValue'"; 
-        // return $query;
         return $this->execute($query);
     }
 

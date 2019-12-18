@@ -42,13 +42,14 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                         <h5 class="card-title">Edit details</h5>
                         <?php 
                             if (isset($_GET['updatedDetails'])) {
-                                if ($_GET['updatedDetails'] == 'success') {
+                                $updatedDetails = $_GET['updatedDetails'];
+                                if ($updatedDetails == 'success') {
                                  echo '<div class="alert alert-success fade show" role="alert">Successfully updated details about your company.</div>';
-                                } else {
+                                } else if ($updatedDetails == 'fail'){
                                     echo '<div class="alert alert-danger fade show" role="alert">Could not update company details due to empty entries.</div>'; 
+                                } else {
+                                    echo '<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>There was no data to be updated.</div>';
                                 }
-                            } else {
-                                echo '<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>There was no data to be updated.</div>';
                             }
                         ?>
                         <div class="widget-content p-0">
@@ -57,6 +58,14 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     <div class="widget-content-left">
                                         <img width="100" class="rounded-circle" src="<?php echo $company->get('logo') ? $company->get('logo') : 'https://i-love-png.com/images/not-available_7305.png' ?>"
                                             alt="">
+                                            <br>
+                                            <form action="logic/upload-pic.php" method="POST" enctype="multipart/form-data">
+                                                <input type="file" id="picInput" name="company-logo" accept="image/*"/>
+                                                <input type="hidden" name="company-id" value="<?php echo $_GET['id'] ?>" />
+                                                <br>
+                                                <button class="mt-2 btn btn-info" id="update-pic">Update</button>
+                                                <button class="mt-2 btn btn-info" onclick="location.href='logic/remove-pic.php?id=' + <?php echo $_GET['id']; ?> " id="remove-pic">Remove</button>
+                                            </form>
                                     </div>
                                 </div>
                                 <div class="widget-content-left flex2">
