@@ -4,11 +4,11 @@ include_once "../../../app/bootstrap.php";
 use entity\Company;
 use Util\FileManager;
 
-// show($_POST);
-// if ($_POST['upload-type'] == 'user') {
 $baseUploadDir = "uploads". DIRECTORY_SEPARATOR;
 
+$result = "fail";
 if (isset($_FILES['user-avatar'])) {
+
 	$avatar = $_FILES['user-avatar'];
 	$path = $avatar['name'];
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
@@ -21,13 +21,11 @@ if (isset($_FILES['user-avatar'])) {
 
 	if ($filePath = FileManager::upload($avatar, $hashFileName, $uploadDir)) {
 		if ($currentUser->get('avatar') != null) {
-			$oldPic = ("../" . $currentUser->get('avatar'));
-			unlink($oldPic); // TODO make a delete function?
+			FileManager::deleteFromFS($currentUser->get('avatar')); 
 		}
+
 		$db->updateUserField($currentUser->get('id'), "avatar", "../../" . $filePath);
 		$result = "success";
-	} else {
-		$result = "fail";
 	}
 	returnToPage("../edit-profile.php?upload=" . $result);
 
@@ -41,17 +39,15 @@ if (isset($_FILES['user-avatar'])) {
 	$uploadDir = $baseUploadDir . "companies";
 	$fileName = $companyId . "-" . $currentUser->get('id') . "_" . generateRandomString() . "_" . date_format(new DateTime(), "Y-m-d/H:m:s");
 	$hashFileName = hash('ripemd160', $fileName) . "." . $ext;
-
+	
 	$company = new Company($companyId);
 	if ($filePath = FileManager::upload($logo, $hashFileName, $uploadDir)) {
 		if ($company->get('logo') != null) {
-			$oldPic = ("../" . $company->get('logo'));
-			unlink($oldPic); // TODO make a delete function?
+			FileManager::deleteFromFS($company->get('logo'));
 		}
-		$db->update("companies", "logo", "../../" . $filePath, "id", $companyId);
-		$result = "success";
-	} else {
-		$result = "fail";
+		if ($db->update("companies", "logo", "../../" . $filePath, "id", $companyId)) {
+			$result = "success";
+		} 
 	}
 	returnToPage("../edit-company.php?id=" . $companyId . "&upload=" . $result);
 

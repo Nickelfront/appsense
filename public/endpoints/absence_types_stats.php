@@ -14,8 +14,19 @@ $school = 0;
 
 $companies = $user->getCompanies();
 
+$now = new DateTime();
+$thisMonth = $now->format("n");
+$secondMonth = $now->format("n")-1;
+$thirdMonth = $now->format("n")-2;
+
+$monthlyStats = array(
+    $thisMonth => array(),
+    $secondMonth => array(),
+    $thirdMonth => array()
+);
+//TODO GET FOR EACH OF THREE MONTHS
 foreach ($companies as $company) {
-    $query = "SELECT absence_type_id FROM absence_requests ar JOIN employees e ON ar.employee_id = e.id WHERE e.company_id = " . $company->get('id');
+    $query = "SELECT absence_type_id, from_date, to_date FROM absence_requests ar JOIN employees e ON ar.employee_id = e.id WHERE e.company_id = " . $company->get('id');
     $absences = $db->searchInDB($query);
     foreach ($absences as $absence) {
         $absenceType = $absence['absence_type_id'];

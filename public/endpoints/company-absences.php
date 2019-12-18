@@ -29,7 +29,6 @@ foreach ($approvedAbsenceRequests as $index => $absence) {
     $results[$index]['title'] = $user->get('first_name') . " " . $user->get('last_name');
     $results[$index]['start'] = $absence['from_date'];
     $results[$index]['end'] = $absence['to_date'];
-    // $index++;
 }
 
 header("Content-Type: application/json");

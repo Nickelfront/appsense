@@ -320,35 +320,77 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             "user-token": "<?php echo $_SESSION['login_token']; ?>"
         }
     }
+    
     $(document).ready( () => {
+
+        var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var thisMonth = new Date().getMonth();
 
         var absencesChartEl = document.querySelector('#most-absences').getContext('2d');
         var absencesChart = new Chart(absencesChartEl, {
             type: 'bar',
             data: {
-                labels: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                labels:  [MONTHS[thisMonth-2], MONTHS[thisMonth-1], MONTHS[thisMonth]],
                 datasets: [{
-                    
+                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                    label: 'Vacations',
                     data: [],
-                    backgroundColor: [
-                        'rgba(44, 200, 77, 0.8)',
-                        'rgba(205, 0, 26, 0.8)',
-                        'rgba(255, 215, 0, 0.8)',
-                        'rgba(113, 197, 232, 0.8)'
-                    ]
+                    backgroundColor: '#3ac47d',
+                    stack: "Vacations"
+                },
+                {
+                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                    label: 'Sickness',
+                    data: [],
+                    backgroundColor: '#d92550',
+                    stack: "Sickness"
+                },
+                {
+                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                    label: 'School',
+                    data: [],
+                    backgroundColor: '#f7b924',
+                    stack: "School"
+                },
+                {
+                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                    label: 'Work from Home',
+                    data: [],
+                    backgroundColor: '#3f6ad8',
+                    stack: "Work from Home"
                 }],
             },
             options: {
-                legend: {
-                    display: false
+                title: {
+						display: true,
+						text: 'Absences from the last 3 months'
+					},
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
                 },
+                responsive: true,
                 scales: {
                     yAxes: [{
                         ticks: {
-                            // beginAtZero: true
-                            min: 0,
-                            stepSize: 1
-                        }
+                            legend: {
+                                display: true,
+                            },
+                            beginAtZero: true
+                        },
+                        scaleLabel: {
+                            display:true,
+                            labelString: "Number of requests"
+                        },
+                        stacked: true,
+                        stepSize: 1
+                    }],
+                    xAxes: [{
+                        scaleLabel: {
+                            display:true,
+                            labelString: "Month"
+                        },
+                        stacked: true
                     }]
                 }
             }
@@ -387,21 +429,16 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             .then(function (response) {
                 // handle success
                 var absences = response.data;
-                console.log(absences);
-                console.log(absenceChart.data.datasets);
                 
                 absenceChart.data.datasets[0].data.push(absences.vacation);
-                absenceChart.data.datasets[0].data.push(absences.sickness);
-                absenceChart.data.datasets[0].data.push(absences.school);
-                absenceChart.data.datasets[0].data.push(absences.home);
+                absenceChart.data.datasets[1].data.push(absences.sickness);
+                absenceChart.data.datasets[2].data.push(absences.school);
+                absenceChart.data.datasets[3].data.push(absences.home);
                 
                 absenceChart.update();
             })
             .catch(function (error) {
                 // handle error
-                // document.querySelector("#totalAbsences").innerHTML = "N/A";
-                // document.querySelector("#totalPendingRequests").innerHTML = "N/A";
-                // document.querySelector("#totalWorkHours").innerHTML = "N/A";
                 console.log(error);
             })
             .finally(function () {
@@ -409,80 +446,6 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             }
         );
     }
-
-
-        // var barChartData = {
-        //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        //     datasets: [{
-        //         label: 'Dataset 1',
-        //         backgroundColor: [
-        //             window.chartColors.red,
-        //             window.chartColors.orange,
-        //             window.chartColors.yellow,
-        //             window.chartColors.green,
-        //             window.chartColors.blue,
-        //             window.chartColors.purple,
-        //             window.chartColors.red
-        //         ],
-        //         yAxisID: 'y-axis-1',
-        //         data: [
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor()
-        //         ]
-        //     }, {
-        //         label: 'Dataset 2',
-        //         backgroundColor: window.chartColors.grey,
-        //         yAxisID: 'y-axis-2',
-        //         data: [
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor(),
-        //             randomScalingFactor()
-        //         ]
-        //     }]
-
-        // };
-
-        //     var ctx = document.getElementById('canvas').getContext('2d');
-        //     window.myBar = new Chart(ctx, {
-        //         type: 'bar',
-        //         data: barChartData,
-        //         options: {
-        //             responsive: true,
-        //             title: {
-        //                 display: true,
-        //                 text: 'Chart.js Bar Chart - Multi Axis'
-        //             },
-        //             tooltips: {
-        //                 mode: 'index',
-        //                 intersect: true
-        //             },
-        //             scales: {
-        //                 yAxes: [{
-        //                     type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-        //                     display: true,
-        //                     position: 'left',
-        //                     id: 'y-axis-1',
-        //                 }, {
-        //                     type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-        //                     display: true,
-        //                     position: 'right',
-        //                     id: 'y-axis-2',
-        //                     gridLines: {
-        //                         drawOnChartArea: false
-        //                     }
-        //                 }],
-        //             }
-        //         }
-        //     });
    
     </script>
 

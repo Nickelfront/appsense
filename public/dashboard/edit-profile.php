@@ -51,27 +51,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     <div class="widget-content-left">
                                         <img width="100" class="rounded-circle" src="<?php echo $currentUser->get('avatar') ? $currentUser->get('avatar') : 'https://eu.ui-avatars.com/api/?name=' . $currentUser->get('first_name') . "+" . $currentUser->get('last_name'); ?>"
                                             alt="">
-                                            
-                                        <div class="row">
                                         
-                                            <form action="logic/upload-pic.php" method="POST" enctype="multipart/form-data">
-                                                <div class="mt-2 btn-group">
-                                                    <button class="btn btn-dark">Change</button>
-                                                    <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dropdown-toggle-split dropdown-toggle btn btn-dark">
-                                                        <span class="sr-only">Toggle Dropdown</span>
-                                                    </button>
-                                                    <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(52px, 33px, 0px);">
-                                                        <button type="button" tabindex="0" class="dropdown-item"id="updatePic" onclick="$('#picInput').click();">Update picture</button>
-                                                        <div tabindex="-1" class="dropdown-divider"></div>
-                                                        <button onclick="location.href='logic/remove-pic.php?user'" type="button" tabindex="0" class="dropdown-item" >Remove current picture</button>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" name="upload-type" value="user">
-                                                <input style="height:0px;display:none;overflow:hidden" type="file" id="picInput" name="user-avatar" accept="image/*"/>
-                                                <br>
-                                                <button class="mt-2 btn btn-info" id="update-pic">Update</button>
-                                            </form>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="widget-content-left flex2">
@@ -97,7 +77,27 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                             }
                                         ?>
                                     </div>
-                                </div>
+                                </div>                              
+                            </div>
+                            <div class="row mt-3 ml-1">  
+                                <form action="logic/upload-pic.php" method="POST" enctype="multipart/form-data">
+                                    <div class="mt-2 btn-group">
+                                        <button class="btn btn-dark">Change Photo</button>
+                                        <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dropdown-toggle-split dropdown-toggle btn btn-dark">
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(52px, 33px, 0px);">
+                                            <button type="button" tabindex="0" class="dropdown-item"id="updatePic" onclick="$('#picInput').click();">Update picture</button>
+                                            <div tabindex="-1" class="dropdown-divider"></div>
+                                            <button onclick="location.href='logic/remove-pic.php?user'" type="button" tabindex="0" class="dropdown-item" >Remove current picture</button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="upload-type" value="user">
+                                    <input style="height:0px;display:none;overflow:hidden" type="file" id="picInput" name="user-avatar" accept="image/*"/>
+                                    
+                                    <button class="mt-2 btn btn-info" id="update-pic">Update</button>
+                                </form>
+                                
                             </div>
                         </div>
 

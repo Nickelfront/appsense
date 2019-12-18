@@ -58,14 +58,6 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     <div class="widget-content-left">
                                         <img width="100" class="rounded-circle" src="<?php echo $company->get('logo') ? $company->get('logo') : 'https://i-love-png.com/images/not-available_7305.png' ?>"
                                             alt="">
-                                            <br>
-                                            <form action="logic/upload-pic.php" method="POST" enctype="multipart/form-data">
-                                                <input type="file" id="picInput" name="company-logo" accept="image/*"/>
-                                                <input type="hidden" name="company-id" value="<?php echo $_GET['id'] ?>" />
-                                                <br>
-                                                <button class="mt-2 btn btn-info" id="update-pic">Update</button>
-                                                <button class="mt-2 btn btn-info" onclick="location.href='logic/remove-pic.php?id=' + <?php echo $_GET['id']; ?> " id="remove-pic">Remove</button>
-                                            </form>
                                     </div>
                                 </div>
                                 <div class="widget-content-left flex2">
@@ -81,6 +73,24 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     </div>
                                 </div>
                             </div>
+                            <form action="logic/upload-pic.php" method="POST" enctype="multipart/form-data">
+                                <div class="mt-2 btn-group">
+                                    <button class="btn btn-dark">Change Logo</button>
+                                    <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dropdown-toggle-split dropdown-toggle btn btn-dark">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(52px, 33px, 0px);">
+                                        <button type="button" tabindex="0" class="dropdown-item"id="updatePic" onclick="$('#picInput').click();">Update logo</button>
+                                        <div tabindex="-1" class="dropdown-divider"></div>
+                                        <button onclick="location.href=`logic/remove-pic.php?company-id=<?php echo $_GET['id']; ?>`" type="button" tabindex="0" class="dropdown-item" >Remove current logo</button>
+                                    </div>
+                                </div>
+                                        
+                                <input style="height:0px;display:none;overflow:hidden" type="file" id="picInput" name="company-logo" accept="image/*"/>
+                                <input type="hidden" name="company-id" value="<?php echo $_GET['id'] ?>" />
+
+                                <button class="mt-2 btn btn-info" id="update-pic">Update</button>
+                            </form>
                         </div>
                         <div class="divider"></div>
 

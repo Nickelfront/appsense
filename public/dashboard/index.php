@@ -481,17 +481,66 @@ returnToPage($dashboardPage . "-dashboard.php");
         console.log(data);
         absencesChart = new Chart(absencesChartEl, {
             type: 'bar',
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
-                label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                label: 'Vacations',
                 data: data,
                 backgroundColor: [
                     '#3ac47d',
                     '#d92550',
                     '#f7b924',
                     '#3f6ad8'
-                ]
+                ],
+                stack: "Vacations"
+            },
+            {
+                // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                label: 'Sickness',
+                data: data,
+                backgroundColor: [
+                    '#3ac47d',
+                    '#d92550',
+                    '#f7b924',
+                    '#3f6ad8'
+                ],
+                stack: "Sickness"
+            },
+            {
+                // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                label: 'School',
+                data: data,
+                backgroundColor: [
+                    '#3ac47d',
+                    '#d92550',
+                    '#f7b924',
+                    '#3f6ad8'
+                ],
+                stack: "School"
+            },
+            {
+                // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                label: 'Work from Home',
+                data: data,
+                backgroundColor: [
+                    '#3ac47d',
+                    '#d92550',
+                    '#f7b924',
+                    '#3f6ad8'
+                ],
+                stack: "Work from Home"
             }],
             options: {
+                title: {
+						display: true,
+						text: 'Chart.js Bar Chart - Stacked'
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: false
+					},
+                    responsive: true,
+                },
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -499,7 +548,8 @@ returnToPage($dashboardPage . "-dashboard.php");
                                 display: true,
                             },
                             beginAtZero: true
-                        }
+                        },
+                        stacked: true
                     }],
                     xAxes: [{
                         type: 'time',
@@ -507,27 +557,27 @@ returnToPage($dashboardPage . "-dashboard.php");
                             displayFormats: {
                                 quarter: 'MM YYYY'
                             }
-                        }
+                        }, 
+                        stacked: true
                     }]
                 }
-            }
-        });
-    }
+            });
+         }
 
     function getStats() {
         axios.get('../endpoints/totals.php', config)
             .then(function (response) {
                 // handle success
-                document.querySelector("#totalAbsences").innerHTML = response.data.totalAbsences;
-                document.querySelector("#totalPendingRequests").innerHTML = response.data.totalPendingRequests;
-                document.querySelector("#totalWorkHours").innerHTML = response.data.totalWorkHours;
+                $("#totalAbsences").text(response.data.totalAbsences);
+                $("#totalPendingRequests").text(response.data.totalPendingRequests);
+                $("#totalWorkHours").text(response.data.totalWorkHours);
                 // console.log(response.data);
             })
             .catch(function (error) {
                 // handle error
-                document.querySelector("#totalAbsences").innerHTML = "N/A";
-                document.querySelector("#totalPendingRequests").innerHTML = "N/A";
-                document.querySelector("#totalWorkHours").innerHTML = "N/A";
+                $("#totalAbsences").text("N/A");
+                $("#totalPendingRequests").text("N/A");
+                $("#totalWorkHours").text("N/A");
                 // console.log(error);
             })
             .finally(function () {
@@ -554,6 +604,56 @@ returnToPage($dashboardPage . "-dashboard.php");
             }
         );
     }
+
+    
+		var barChartData = {
+			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+			datasets: [{
+				label: 'Dataset 1',
+				backgroundColor: window.chartColors.red,
+				stack: 'Stack 0',
+			}, {
+				label: 'Dataset 2',
+				backgroundColor: window.chartColors.blue,
+				stack: 'Stack 0',
+				data: [
+				]
+			}, {
+				label: 'Dataset 3',
+				backgroundColor: window.chartColors.green,
+				stack: 'Stack 1',
+				data: [
+				]
+			}]
+
+		};
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myBar = new Chart(ctx, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					title: {
+						display: true,
+						text: 'Chart.js Bar Chart - Stacked'
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: false
+					},
+					responsive: true,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					}
+				}
+			});
+		};
+	
 
     </script>
 

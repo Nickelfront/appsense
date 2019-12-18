@@ -165,7 +165,7 @@ class DB {
     public function updateUserField($userId, $field, $newValue) {
         $this->update("users", $field, $newValue, "id", $userId);
         $now = new DateTime();
-        $this->update("users", "updated_at", date_format($now, 'Y-m-d H:i:s'), "id", $userId);
+        return $this->update("users", "updated_at", date_format($now, 'Y-m-d H:i:s'), "id", $userId);
     }
 
     /** DELETE OPERATIONS -TODO */
@@ -232,7 +232,7 @@ class DB {
      * @return int or false if transaction failed
      */
     private function execute($query) {
-        $this->connection->exec($query);
+        return $this->connection->exec($query);
     }
     
     public function getLastInsertedID() {
@@ -257,6 +257,6 @@ class DB {
      */
     public function delete($table, $uniqueField, $uniqueValue) {
         $query = "DELETE FROM $table WHERE $uniqueField = '$uniqueValue'";
-        $this->execute($query);
+        return $this->execute($query);
     }
 }
