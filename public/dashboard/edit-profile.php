@@ -33,12 +33,41 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                     <div class="card-body">
                         <h5 class="card-title">Your profile</h5>
                         <!-- <div class="alert alert-danger fade show" role="alert">This is a danger alert — check it out!</div> -->
+                         <?php 
+                            if (isset($_GET['updatedDetails'])) {
+                                if ($_GET['updatedDetails'] == 'success') {
+                                 echo '<div class="alert alert-success fade show" role="alert">Successfully updated your profile.</div>';
+                                } else {
+                                    echo '<div class="alert alert-danger fade show" role="alert">Could not update your profile due to empty entries.</div>'; 
+                                }
+                            } else {
+                                echo '<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>There was no data to be updated.</div>';
+                            }
+                        ?>
                         <div class="widget-content p-0">
                             <div class="widget-content-wrapper">
                                 <div class="widget-content-left mr-3">
                                     <div class="widget-content-left">
                                         <img width="100" class="rounded-circle" src="<?php echo $currentUser->get('avatar') ? $currentUser->get('avatar') : 'https://eu.ui-avatars.com/api/?name=' . $currentUser->get('first_name') . "+" . $currentUser->get('last_name'); ?>"
                                             alt="">
+                                            
+                                        <div class="row">
+                                            <form action="logic/upload-pic.php" method="POST" enctype="multipart/form-data">
+                                                <div class="mt-2 btn-group">
+                                                    <button class="btn btn-dark">Change</button>
+                                                    <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dropdown-toggle-split dropdown-toggle btn btn-dark">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(52px, 33px, 0px);">
+                                                        <button type="button" tabindex="0" class="dropdown-item"id="updatePic" onclick="$('#picInput').click();">Update picture</button>
+                                                        <div tabindex="-1" class="dropdown-divider"></div>
+                                                        <button type="button" tabindex="0" class="dropdown-item" id="removePic">Remove current picture</button>
+                                                    </div>
+                                                </div>
+                                                <input style="height:0px;display:none;overflow:hidden" type="file" id="picInput" name="user-avatar" accept="image/*"/>
+                                                <button class="mt-2 mr-2 btn btn-info" id="update-pic">Update</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="widget-content-left flex2">
@@ -108,6 +137,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                         if (isset($_GET['changedPassword'])) {
                                             if($_GET['changedPassword'] == 'fail') {
                                                 if ($_GET['reason'] == 'wrongPass') $reason = "Incorrect current password.";
+                                                if ($_GET['reason'] == 'noMatch') $reason = "The fields for new password did not match.";
                                                 if ($_GET['reason'] == 'shortPass') $reason = "The new password must be at least 6 characters long.";
                                                 echo '<div class="alert alert-danger fade show" role="alert">' . $reason . '</div>';
                                             } else {

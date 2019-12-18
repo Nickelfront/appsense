@@ -7,7 +7,9 @@ $currentPass = $_POST['currentPassword'];
 $result = "fail";
 if (password_verify($currentPass, $currentUser->get('password'))) {
     $newPass = $_POST['newPassword'];
-    if (strlen($newPass) < 6) {
+    if ($_POST['newPassword'] != $_POST['confirmedNewPassword']) {
+    	$result .= "&reason=noMatch";
+    } else if (strlen($newPass) < 6) {
     	$result .= "&reason=shortPass";
     } else {
 	    $currentUser->updateField("password", password_hash($newPass, PASSWORD_BCRYPT));

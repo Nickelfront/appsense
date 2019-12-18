@@ -89,6 +89,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                 $noCompaniesHTML = '<p class="text-center">You have no companies.</p>';
 
                                 $companies = $currentUser->getCompanies();
+                                
 
                                 $idCounter = 1;
                                 foreach ($companies as $company) {
