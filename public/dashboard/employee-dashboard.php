@@ -83,21 +83,27 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
     </div>
 
     <script>
+    
+    var config = {
+        headers: {
+            "user-token": "<?php echo $_SESSION['login_token']; ?>"
+        }
+    }
+
     $(document).ready( ()=> {
-        // $.ajax({
-        //     url: "test.html",
-        //     cache: false
-        //     })
-        //     .done(function( html ) {
-        //         $( "#results" ).append( html );
-        // });
 
         var ctx = $("#absencesPie");
         var pieChart = new Chart(ctx, {
             type: 'pie',
             data: {
                 datasets: [{
-                    data: [1, 5, 2, 6]
+                    data: [1, 5, 2, 6],
+                    backgroundColor: [
+                        '#3ac47d',
+                        '#d92550',
+                        '#f7b924',
+                        '#3f6ad8'
+                    ]
                 }], 
                 labels: [
                     'Vacation',
@@ -106,13 +112,38 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                     'Work from Home'
                 ]
             }
-            // options: options
         });
-        // $(window).resize(setTimeout(respondCanvas, 500));
 
-        // GetChartData();
+        getStats(absenceChart);
     });
 
+    function getStats() {
+        axios.get('../endpoints/employee-absences.php', config)
+            .then(function (response) {
+                // handle success
+                var absences = response.data;
+                // console.log(response);
+                for (var i = 2; i > -1; i--) {
+                    var stats = absences[MONTHS[thisMonth - i]]; 
+                    
+                    absenceChart.data.datasets[0].data.push(stats['vacation']);
+                    absenceChart.data.datasets[1].data.push(stats['sickness']);
+                    absenceChart.data.datasets[2].data.push(stats['school']);
+                    absenceChart.data.datasets[3].data.push(stats['work from home']);                    
+                }
+
+                absenceChart.update();
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                setTimeout(getAbsenceStats, 20000);
+            }
+        );
+    }
+    
 
     </script>
 

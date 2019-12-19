@@ -59,9 +59,10 @@ class User extends Entity {
     }
 
     public function getColleagues() {
-        $company = new Company($this->getEmployeeData()->get('company_id'));
+        $employee = $this->getEmployeeData();
+        $company = new Company($employee->get('company_id'));
         
-        $colleagues = $company->getAllEmployees($companyId);
+        $colleagues = $company->getAllEmployees();
         
         return $colleagues;
     }
@@ -70,7 +71,7 @@ class User extends Entity {
         $colleagues = $this->getColleagues();
         $colleaguesWithThisPosition = array();
         foreach ($colleagues as $colleague) {
-            if ($colleague['position_id'] == $this->getEmployeeData()->get('position_id')) {
+            if ($colleague->get('position_id') == $this->getEmployeeData()->get('position_id')) {
                 $colleaguesWithThisPosition[] = $colleague;
             }
         }

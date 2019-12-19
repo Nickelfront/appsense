@@ -50,6 +50,22 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                 } else {
                                     echo '<div class="alert alert-info alert-dismissible fade show" role="alert"><button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>There was no data to be updated.</div>';
                                 }
+                            } 
+                            if (isset($_GET['upload'])) {
+                                $upload = $_GET['upload'];
+                                if ($upload == 'success') {
+                                    echo '<div class="alert alert-success fade show" role="alert">Successfully updated your company logo.</div>';
+                                } else {
+                                    echo '<div class="alert alert-danger fade show" role="alert">Could not update company logo.</div>'; 
+                                }
+                            }
+                            if (isset($_GET['removed'])) {
+                                $removed = $_GET['removed'];
+                                if ($removed == 'success') {
+                                    echo '<div class="alert alert-success fade show" role="alert">Successfully removed your company logo.</div>';
+                                } else {
+                                    echo '<div class="alert alert-danger fade show" role="alert">Could not remove company logo.</div>'; 
+                                }
                             }
                         ?>
                         <div class="widget-content p-0">

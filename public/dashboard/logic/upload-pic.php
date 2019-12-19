@@ -15,10 +15,8 @@ if (isset($_FILES['user-avatar'])) {
 
 	$uploadDir = $baseUploadDir . "users";
 	$fileName = $currentUser->get('id') . "_" . generateRandomString() . "_" . date_format(new DateTime(), "Y-m-d/H:m:s");
-	// show($fileName);
 	$hashFileName = hash('ripemd160', $fileName) . "." . $ext;
-	// show($hashFileName);
-
+	
 	if ($filePath = FileManager::upload($avatar, $hashFileName, $uploadDir)) {
 		if ($currentUser->get('avatar') != null) {
 			FileManager::deleteFromFS($currentUser->get('avatar')); 
@@ -51,4 +49,6 @@ if (isset($_FILES['user-avatar'])) {
 	}
 	returnToPage("../edit-company.php?id=" . $companyId . "&upload=" . $result);
 
+} else {
+	returnToPage("../index.php");
 }

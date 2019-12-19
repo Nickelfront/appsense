@@ -138,7 +138,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                             company</button>
                         </div>
 
-                        <nav class="col-md-4" aria-label="Page navigation example">
+                        <!-- <nav class="col-md-4" aria-label="Page navigation example">
                             <ul class="pagination float-right">
                                 <li class="page-item">
                                     <a href="javascript:void(0);" class="page-link" aria-label="Previous"><span aria-hidden="true">«</span><span class="sr-only">Previous</span></a>
@@ -150,7 +150,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                     <span aria-hidden="true">»</span><span class="sr-only">Next</span></a>
                                 </li>
                             </ul>
-                        </nav>
+                        </nav> -->
                     </div>
                 </div>
             </div>

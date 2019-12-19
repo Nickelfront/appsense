@@ -6,10 +6,10 @@ use Util\Template;
 $pageName = "New Absence Request";
 $templateDir = "public/dashboard"; 
 
+if ($currentUser->get('user_type_id') == 1) {
+    returnToPage("index.php");
+}
 init_dashboard($currentUser, Template::header($pageName, $templateDir));
-// if ($currentUser->get('user_type_id')) {
-//     returnToPage("index.php");
-// }
 
 ?>
 
@@ -80,10 +80,44 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             </div>    
         </div>
     </div>
+    <div class="widget-content">
+        <div class="widget-content-outer">
+            <div class="widget-content-wrapper">
+                <div class="widget-content-left">
+                    <div class="widget-numbers fsize-3 text-muted">
+                    <?php
+                        $employeeData = $currentUser->getEmployeeData();
+                        $used = $employeeData->get('used_days_off');
+                        $total = $employeeData->get('available_days_off');
+                        echo $used . " out of " . $total . " days off left.";
+                    ?>
+                    </div>
+                </div>
+                <div class="widget-content-right">
+                    <!-- <div class="text-muted opacity-6">Submitted Tickers</div> -->
+                </div>
+            </div>
+            <div class="widget-progress-wrapper mt-1">
+                <div class="progress-bar-sm progress-bar-animated-alt progress">
+                    <?php 
+                        $percent = $used * 100 / $total;
+                        echo '<div class="progress-bar bg-success" role="progressbar" aria-valuenow="' . $percent . '" aria-valuemin="0" aria-valuemax="100" style="width: '. $percent . '%;"></div>';
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="main-card mb-3 card">
         <div class="card-body">
-            <h5 class="card-title">Grid</h5>
-            <form class="" action="logic/absence-request.php" method="POST">
+            <h5 class="card-title">New absence request</h5>
+            <?php 
+                if (isset($_GET['success'])) {
+                    echo '<div class="alert alert-success fade show" role="alert">Successfully sent absence request.</div>';
+                } else if (isset($_GET['fail'])) {
+                    echo '<div class="alert alert-danger fade show" role="alert">Could not send your request. Please make sure that all fields are correct.</div>'; 
+                } 
+            ?>
+            <form class="" action="logic/absence-request.php" method="POST" enctype="multipart/form-data">
                 <div class="position-relative row form-group">
                     <label for="fromDate" class="col-sm-2 col-form-label">From</label>
                     <div class="col-sm-10">
@@ -138,9 +172,9 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                                 $userColleagues = $currentUser->getColleaguesWithThisPosition();
                                 foreach ($userColleagues as $colleague) {
                                     //TODO also check if employee isnt absent too within given period
-                                    $substituteUserData = $db->findRecord("users", "id = '" . $colleague['user_id'] ."'");
+                                    $substituteUserData = $db->findRecord("users", "id = '" . $colleague->get('user_id') ."'");
                                     $substituteUserData = array(
-                                        "id" => $colleague['id'],
+                                        "id" => $colleague->get('id'),
                                         "name" => $substituteUserData['first_name'] . " " . $substituteUserData['last_name']
                                     );
                                     $substituteOption = fillTemplateWithData($substitutePlaceholder, $placeholders, $substituteUserData);

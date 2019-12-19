@@ -275,16 +275,16 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                     <div class="card-header-tab card-header">
                         <div class="card-header-title">
                             <i class="header-icon lnr-rocket icon-gradient bg-tempting-azure"> </i>
-                            Bandwidth Reports
+                            Approved and Rejected Requests
                         </div>
                         <div class="btn-actions-pane-right">
                             <div class="nav">
-                                <a href="javascript:void(0);"
+                                <!-- <a href="javascript:void(0);"
                                     class="border-0 btn-pill btn-wide btn-transition active btn btn-outline-alternate">Tab
                                     1</a>
                                 <a href="javascript:void(0);"
                                     class="ml-1 btn-pill btn-wide border-0 btn-transition  btn btn-outline-alternate second-tab-toggle-alt">Tab
-                                    2</a>
+                                    2</a> -->
                             </div>
                         </div>
                     </div>
@@ -292,14 +292,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                         <div class="tab-pane fade active show" id="tab-eg-55">
                             <div class="widget-chart p-3">
                                 <div style="height: 350px">
-                                    <canvas id="line-chart"></canvas>
-                                </div>
-                                <div class="widget-chart-content text-center mt-5">
-                                    <div class="widget-description mt-0 text-warning">
-                                        <i class="fa fa-arrow-left"></i>
-                                        <span class="pl-1">175.5%</span>
-                                        <span class="text-muted opacity-8 pl-1">increased server resources</span>
-                                    </div>
+                                    <canvas id="reviewedRequests"></canvas>
                                 </div>
                             </div>
                             <div class="pt-2 card-body">
@@ -320,11 +313,11 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             "user-token": "<?php echo $_SESSION['login_token']; ?>"
         }
     }
+
     var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var thisMonth = new Date().getMonth();
 
     $(document).ready( () => {
-
 
         var absencesChartEl = document.querySelector('#most-absences').getContext('2d');
         var absencesChart = new Chart(absencesChartEl, {
@@ -333,28 +326,21 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                 labels:  [MONTHS[thisMonth-2], MONTHS[thisMonth-1], MONTHS[thisMonth]],
                 datasets: [{
                     label: "Vacations",
-                    stack: "Vacations",
                     data: [],
                     backgroundColor: '#3ac47d'
                 },
                 {
-                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
-                    label: "School",
-                    stack: "School",
-                    data: [],
-                    backgroundColor: '#f7b924'
-                },
-                {
-                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
                     label: "Sickness",
-                    stack: "Sickness",
                     data: [],
                     backgroundColor: '#d92550'
                 },
                 {
-                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
+                    label: "School",
+                    data: [],
+                    backgroundColor: '#f7b924'
+                },
+                {
                     label: "Work from Home",
-                    stack: "Work from Home",
                     data: [],
                     backgroundColor: '#3f6ad8'
                 }]
@@ -363,7 +349,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                 title: {
 						display: true,
 						text: 'Absences from the last 3 months'
-					},
+                },
                 tooltips: {
                     mode: 'index',
                     intersect: false
@@ -381,7 +367,6 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                             display:true,
                             labelString: "Number of requests"
                         },
-                        stacked: true,
                         stepSize: 1
                     }],
                     xAxes: [{
@@ -389,14 +374,40 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                             display:true,
                             labelString: "Month"
                         },
-                        stacked: true
                     }]
                 }
             }
         });
 
-        getAbsenceStats(absencesChart);
+        var reviewedRequestsChartEl = document.querySelector('#reviewedRequests').getContext('2d');
+        var reviewedRequestsChart = new Chart(reviewedRequestsChartEl, {
+            type: "line",
+            data: {
+                labels: [MONTHS[thisMonth-6], MONTHS[thisMonth-5], MONTHS[thisMonth-4], MONTHS[thisMonth-3], MONTHS[thisMonth-2], MONTHS[thisMonth-1], MONTHS[thisMonth]],
+                datasets: [
+                    {
+                        label: "Approved",
+                        backgroundColor: '#4cd13b',
+                        borderColor: '#4cd13b',
+                        // data: [1,2,6,3,1,5],
+                        data: [],
+                        fill: false
+                    },
+                    {
+                        label: "Rejected",
+                        backgroundColor: '#db1a1a',
+                        borderColor: '#db1a1a',
+                        // data: [5,8,4,1,1,3],
+                        data: [],
+                        fill: false
+                    }
+                ]
+            }
+        });
+
         getStats();
+        getAbsenceStats(absencesChart);
+        getRequestStats(reviewedRequestsChart);
 
     });
 
@@ -408,7 +419,7 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
                 $("#totalAbsences").text(response.data.totalAbsences);
                 $("#totalPendingRequests").text(response.data.totalPendingRequests);
                 $("#totalWorkHours").text(response.data.totalWorkHours);
-                console.log(response.data);
+                // console.log(response.data);
             })
             .catch(function (error) {
                 // handle error
@@ -427,17 +438,16 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
         axios.get('../endpoints/absence_types_stats.php', config)
             .then(function (response) {
                 // handle success
-                var absences = JSON.stringify(response.data);
-                
-                console.log(absences);
-                console.log(absences[MONTHS[thisMonth]]);
-                console.log(absences[MONTHS[thisMonth-1]]);
-                console.log(absences[MONTHS[thisMonth-2]]);
-
-                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['vacation']);
-                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['school']);
-                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['work from home']);
-                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['sickness']);
+                var absences = response.data;
+                // console.log(response);
+                for (var i = 2; i > -1; i--) {
+                    var stats = absences[MONTHS[thisMonth - i]]; 
+                    
+                    absenceChart.data.datasets[0].data.push(stats['vacation']);
+                    absenceChart.data.datasets[1].data.push(stats['sickness']);
+                    absenceChart.data.datasets[2].data.push(stats['school']);
+                    absenceChart.data.datasets[3].data.push(stats['work from home']);                    
+                }
 
                 absenceChart.update();
             })
@@ -450,6 +460,33 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             }
         );
     }
+
+    function getRequestStats(requestsChart) {
+        axios.get('../endpoints/requests-stats.php', config)
+            .then(function (response) {
+                // handle success
+                var requests = response.data;
+                console.log(requests); 
+
+                for (var i = 6; i > -1; i--) {
+                    var stats = requests[MONTHS[thisMonth - i]]; 
+                    // console.log(stats);
+                    requestsChart.data.datasets[0].data.push(stats['approved']);
+                    requestsChart.data.datasets[1].data.push(stats['rejected']);
+                }                
+                
+                requestsChart.update();
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                setTimeout(getAbsenceStats, 20000);
+            }
+        );    
+    }
+
    
     </script>
 

@@ -1,7 +1,8 @@
 <?php
 
-use entity\User;
+use app\DataBase\DB;
 use Util\DateTimeUtil;
+use entity\User;
 
 include_once "../../app/bootstrap.php";
 
@@ -42,6 +43,8 @@ $monthlyStats = array(
     )
 );
 
+$db = new DB();
+
 foreach ($companies as $company) {
     $query = "SELECT absence_type_id, from_date, to_date FROM absence_requests ar JOIN employees e ON ar.employee_id = e.id WHERE e.company_id = " . $company->get('id');
     $absences = $db->searchInDB($query);
@@ -53,25 +56,6 @@ foreach ($companies as $company) {
         $month = DateTimeUtil::getMonth(DateTimeUtil::stringToDateTime($absence['to_date']), 'name');
         $absenceType = strtolower($db->getType("absence", $absence['absence_type_id']));
         $monthlyStats[$month][$absenceType]++;
-
-
-        // $absenceType = $absence['absence_type_id'];
-        // switch($absenceType) {
-        //     case 1:
-        //         $vacations++;
-        //         break;
-        //     case 2:
-        //         $sicknesses++;
-        //         break;
-        //     case 3:
-        //         $school++;
-        //         break;
-        //     case 4:
-        //         $workFromHome++;
-        //         break;
-        //     default:
-        //         break;
-        // }
     }
 }
 
