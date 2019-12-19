@@ -320,11 +320,11 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             "user-token": "<?php echo $_SESSION['login_token']; ?>"
         }
     }
-    
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var thisMonth = new Date().getMonth();
+
     $(document).ready( () => {
 
-        var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        var thisMonth = new Date().getMonth();
 
         var absencesChartEl = document.querySelector('#most-absences').getContext('2d');
         var absencesChart = new Chart(absencesChartEl, {
@@ -332,33 +332,32 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
             data: {
                 labels:  [MONTHS[thisMonth-2], MONTHS[thisMonth-1], MONTHS[thisMonth]],
                 datasets: [{
-                    // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
-                    label: 'Vacations',
+                    label: "Vacations",
+                    stack: "Vacations",
                     data: [],
-                    backgroundColor: '#3ac47d',
-                    stack: "Vacations"
+                    backgroundColor: '#3ac47d'
                 },
                 {
                     // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
-                    label: 'Sickness',
+                    label: "School",
+                    stack: "School",
                     data: [],
-                    backgroundColor: '#d92550',
-                    stack: "Sickness"
+                    backgroundColor: '#f7b924'
                 },
                 {
                     // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
-                    label: 'School',
+                    label: "Sickness",
+                    stack: "Sickness",
                     data: [],
-                    backgroundColor: '#f7b924',
-                    stack: "School"
+                    backgroundColor: '#d92550'
                 },
                 {
                     // label: ['Vacations', 'Sickness', 'School', 'Work from Home'],
-                    label: 'Work from Home',
+                    label: "Work from Home",
+                    stack: "Work from Home",
                     data: [],
-                    backgroundColor: '#3f6ad8',
-                    stack: "Work from Home"
-                }],
+                    backgroundColor: '#3f6ad8'
+                }]
             },
             options: {
                 title: {
@@ -428,13 +427,18 @@ init_dashboard($currentUser, Template::header($pageName, $templateDir));
         axios.get('../endpoints/absence_types_stats.php', config)
             .then(function (response) {
                 // handle success
-                var absences = response.data;
+                var absences = JSON.stringify(response.data);
                 
-                absenceChart.data.datasets[0].data.push(absences.vacation);
-                absenceChart.data.datasets[1].data.push(absences.sickness);
-                absenceChart.data.datasets[2].data.push(absences.school);
-                absenceChart.data.datasets[3].data.push(absences.home);
-                
+                console.log(absences);
+                console.log(absences[MONTHS[thisMonth]]);
+                console.log(absences[MONTHS[thisMonth-1]]);
+                console.log(absences[MONTHS[thisMonth-2]]);
+
+                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['vacation']);
+                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['school']);
+                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['work from home']);
+                absenceChart.data.datasets[0].data.push(absences[MONTHS[thisMonth]]['sickness']);
+
                 absenceChart.update();
             })
             .catch(function (error) {

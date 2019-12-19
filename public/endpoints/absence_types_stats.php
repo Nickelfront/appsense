@@ -1,6 +1,7 @@
 <?php
 
 use entity\User;
+use Util\DateTimeUtil;
 
 include_once "../../app/bootstrap.php";
 
@@ -15,49 +16,66 @@ $school = 0;
 $companies = $user->getCompanies();
 
 $now = new DateTime();
-$thisMonth = $now->format("n");
-$secondMonth = $now->format("n")-1;
-$thirdMonth = $now->format("n")-2;
+$thisMonth = DateTimeUtil::getMonth($now,'name');
+
+$lastMonth = DateTimeUtil::getMonthsBefore($now, "1", "name");
+$secondToLastMonth = DateTimeUtil::getMonthsBefore($now, "2", "name");
 
 $monthlyStats = array(
-    $thisMonth => array(),
-    $secondMonth => array(),
-    $thirdMonth => array()
+    $thisMonth => array(
+        "vacation" => 0,
+        "sickness" => 0,
+        "school" => 0,
+        "work from home" => 0
+    ),
+    $lastMonth => array(
+        "vacation" => 0,
+        "sickness" => 0,
+        "school" => 0,
+        "work from home" => 0
+    ),
+    $secondToLastMonth => array(
+        "vacation" => 0,
+        "sickness" => 0,
+        "school" => 0,
+        "work from home" => 0
+    )
 );
-//TODO GET FOR EACH OF THREE MONTHS
+
 foreach ($companies as $company) {
     $query = "SELECT absence_type_id, from_date, to_date FROM absence_requests ar JOIN employees e ON ar.employee_id = e.id WHERE e.company_id = " . $company->get('id');
     $absences = $db->searchInDB($query);
     foreach ($absences as $absence) {
-        $absenceType = $absence['absence_type_id'];
-        switch($absenceType) {
-            case 1:
-                $vacations++;
-                break;
-            case 2:
-                $sicknesses++;
-                break;
-            case 3:
-                $school++;
-                break;
-            case 4:
-                $workFromHome++;
-                break;
-            default:
-                break;
-        }
+        $month = DateTimeUtil::getMonth(DateTimeUtil::stringToDateTime($absence['from_date']), 'name');
+        $absenceType = strtolower($db->getType("absence", $absence['absence_type_id']));
+        $monthlyStats[$month][$absenceType]++;
+        
+        $month = DateTimeUtil::getMonth(DateTimeUtil::stringToDateTime($absence['to_date']), 'name');
+        $absenceType = strtolower($db->getType("absence", $absence['absence_type_id']));
+        $monthlyStats[$month][$absenceType]++;
+
+
+        // $absenceType = $absence['absence_type_id'];
+        // switch($absenceType) {
+        //     case 1:
+        //         $vacations++;
+        //         break;
+        //     case 2:
+        //         $sicknesses++;
+        //         break;
+        //     case 3:
+        //         $school++;
+        //         break;
+        //     case 4:
+        //         $workFromHome++;
+        //         break;
+        //     default:
+        //         break;
+        // }
     }
 }
 
-
-$statistics = array(
-    "vacation" => $vacations,
-    "sickness" => $sicknesses, 
-    "school" => $school,
-    "home" => $workFromHome 
-);
-
 header("Content-Type: application/json");
-echo json_encode($statistics);
+echo json_encode($monthlyStats);
 
 exit();
